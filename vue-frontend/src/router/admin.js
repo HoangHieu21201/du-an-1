@@ -23,6 +23,11 @@ const adminAuthRoutes = [
     name: "admin-register",
     component: () => import("../page/admin/adminLoginRegister/register.vue"),
   },
+  {
+    path: "/admin/login",
+    name: "admin-login",
+    component: () => import("../page/admin/adminLoginRegister/login.vue"),
+  },
 ];
 
 const allAdminRoutes = [...adminLayoutRoutes, ...adminAuthRoutes];

@@ -116,7 +116,7 @@ const handleRegister = async () => {
                 confirmButtonText: 'Đi đến trang đăng nhập',
                 confirmButtonColor: '#000'
             }).then(() => {
-                // router.push('/login')
+                router.push('/admin/login')
                 formData.username = "";
                 formData.email = "";
                 formData.password = "";
@@ -160,8 +160,8 @@ const handleRegister = async () => {
             </div>
             <div class="login-link">
                 <span class="text-muted me-2">Đã có tài khoản?</span>
-                <a href="#" class="text-dark fw-bold text-decoration-none">Đăng nhập</a>
-            </div>
+                <router-link class="text-dark fw-bold text-decoration-none" to="/admin/login">Đăng nhập</router-link>
+            </div> 
         </header>
 
         <div class="container-fluid main-content">
