@@ -105,7 +105,7 @@ const handleLogin = async () => {
         <header
             class="header-nav container-fluid d-flex justify-content-between align-items-center p-3 border-bottom bg-white shadow-sm">
             <div class="logo fw-bold fs-5 text-dark">
-                <img src="/icon.png" alt="Logo OutfitVN" width="70px">
+                <img src="/icon.png" alt="Logo OutfitVN" width="200px">
             </div>
             <div class="login-link">
                 <span class="text-muted me-2">Chưa có tài khoản?</span>
