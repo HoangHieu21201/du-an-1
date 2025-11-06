@@ -4,14 +4,20 @@ const adminLayoutRoutes = [
     component: () => import("../layout/layoutAdmin.vue"),
     children: [
       {
+        // Đường dẫn rỗng '' có nghĩa là đây là trang mặc định khi truy cập /admin
+        path: "",
+        name: "admin-dashboard",
+        component: () => import("../page/admin/index.vue"),
+      },
+      {
         path: "users",
-        name: "admin-user",
+        name: "admin-users",
         component: () => import("../page/admin/adminUser/index.vue"),
       },
       {
         path: "products",
-        name: "admin-product",
-        component: () => import("../page/admin/adminProduct/index.vue"),
+        name: "admin-products",
+        component: () => import("../page/admin/product/index.vue"),
       },
     ],
   },

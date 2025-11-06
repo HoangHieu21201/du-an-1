@@ -5,7 +5,9 @@ import Swal from 'sweetalert2';
 import { useRouter } from 'vue-router';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
+const router = useRouter();
 
+// --- Logic cũ của bạn ---
 const formData = reactive({
     username: '',
     email: '',
@@ -24,8 +26,7 @@ const errors = reactive({
 });
 
 const isLoading = ref(false);
-const agreedToTerms = ref(false)
-const router = useRouter()
+const agreedToTerms = ref(false);
 
 const passwordFieldType = ref('password');
 const confirmPasswordFieldType = ref('password');
@@ -39,13 +40,8 @@ const togglePasswordVisibility = (field) => {
 };
 
 const validateForm = () => {
-    errors.username = '';
-    errors.email = '';
-    errors.password = '';
-    errors.confirmPassword = '';
-    errors.general = '';
-    errors.terms = '';
-
+    // Reset lỗi
+    Object.keys(errors).forEach(key => errors[key] = '');
     let isValid = true;
     const re = /^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]+$/;
 
@@ -53,7 +49,7 @@ const validateForm = () => {
         errors.username = 'Vui lòng nhập tên hiển thị.';
         isValid = false;
     } else if (!re.test(formData.username)) {
-        errors.username = 'Tên hiển thị chỉ được dùng chữ và số.'
+        errors.username = 'Tên hiển thị chỉ được dùng chữ và số.';
         isValid = false;
     }
 
@@ -76,7 +72,7 @@ const validateForm = () => {
     if (!formData.confirmPassword) {
         errors.confirmPassword = 'Vui lòng xác nhận mật khẩu.';
         isValid = false;
-    } else if (formData.password && formData.password !== formData.confirmPassword) {
+    } else if (formData.password !== formData.confirmPassword) {
         errors.confirmPassword = 'Mật khẩu xác nhận không khớp!';
         isValid = false;
     }
@@ -90,9 +86,7 @@ const validateForm = () => {
 };
 
 const handleRegister = async () => {
-    if (!validateForm()) {
-        return;
-    }
+    if (!validateForm()) return;
 
     isLoading.value = true;
     const payload = {
@@ -103,161 +97,133 @@ const handleRegister = async () => {
         role: formData.role,
     };
 
-    
-
     try {
-        const res = await axios.post(`${API_URL}/admin_Account`, payload)
+        const res = await axios.post(`${API_URL}/admin_Account`, payload);
         if (res.status === 201 || res.status === 200) {
             Swal.fire({
                 icon: 'success',
-                title: 'Đã tạo tài khoản thành công',
+                title: 'Đăng ký thành công',
                 text: `Tài khoản ${payload.username} đã được tạo!`,
-                showConfirmButton: true,
-                confirmButtonText: 'Đi đến trang đăng nhập',
-                confirmButtonColor: '#000'
+                confirmButtonText: 'Đăng nhập ngay',
             }).then(() => {
-                router.push('/admin/login')
-                formData.username = "";
-                formData.email = "";
-                formData.password = "";
-                formData.confirmPassword = "";
+                router.push('/admin/login');
+                // Reset form
+                Object.assign(formData, { username: '', email: '', password: '', confirmPassword: '' });
                 agreedToTerms.value = false;
-            })
+            });
         }
     } catch (apiError) {
-        console.error("Lỗi đăng ký:", apiError);
-        if (apiError.response && apiError.response.data && apiError.response.data.errors) {
+        if (apiError.response?.data?.errors) {
             const serverErrors = apiError.response.data.errors;
-            if (serverErrors.email) {
-                errors.email = serverErrors.email[0];
-            }
-            if (serverErrors.username) {
-                errors.username = serverErrors.username[0];
-            }
+            if (serverErrors.email) errors.email = serverErrors.email[0];
+            if (serverErrors.username) errors.username = serverErrors.username[0];
         } else {
             Swal.fire({
-                title: 'Thất bại!',
-                text: 'Không thể kết nối đến máy chủ. Vui lòng thử lại sau.',
                 icon: 'error',
-                confirmButtonText: 'Đóng',
-                confirmButtonColor: '#000'
+                title: 'Thất bại',
+                text: 'Không thể kết nối đến máy chủ.',
             });
         }
     } finally {
         isLoading.value = false;
     }
 };
-
 </script>
 
 <template>
-    <div class="register-layout">
-
-        <header
-            class="header-nav container-fluid d-flex justify-content-between align-items-center p-3 border-bottom bg-white shadow-sm">
-            <div class="logo fw-bold fs-5 text-dark">
-                <img src="../../../../public/icon.png" alt="" width="70px">
-            </div>
-            <div class="login-link">
-                <span class="text-muted me-2">Đã có tài khoản?</span>
-                <router-link class="text-dark fw-bold text-decoration-none" to="/admin/login">Đăng nhập</router-link>
-            </div> 
-        </header>
-
-        <div class="container-fluid main-content">
-            <div class="row g-0 h-100">
-
-                <div class="col-md-6 d-none d-md-block image-column">
+    <div class="register-page bg-body-secondary">
+        <div class="register-box">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <h1 class="mb-0 text-center link-offset-2"><b>Đăng ký</b></h1>
                 </div>
+                <div class="card-body register-card-body">
+                    <p class="register-box-msg">Đăng ký thành viên mới</p>
 
-                <div class="col-md-6 col-12 form-column bg-light">
-
-                    <div class="form-wrapper">
-
-                        <h2 class="fw-bold mb-4">Tạo tài khoản Admin</h2>
-
-                        <form @submit.prevent="handleRegister" novalidate>
-
-                            <div class="form-group-wrapper">
-                                <label for="username" class="form-label fw-medium">Tên hiển thị</label>
-                                <input type="text" id="username" class="form-control"
-                                    :class="{ 'is-invalid': errors.username }" v-model="formData.username"
-                                    placeholder="admin123" required />
-                                <div class="form-field-error">
-                                    {{ errors.username }}
-                                </div>
+                    <form @submit.prevent="handleRegister">
+                        <div class="input-group mb-3">
+                            <div class="form-floating">
+                                <input id="registerUsername" type="text" class="form-control"
+                                    :class="{ 'is-invalid': errors.username }" v-model="formData.username" placeholder="" />
+                                <label for="registerUsername">Tên hiển thị</label>
                             </div>
-
-                            <div class="form-group-wrapper">
-                                <label for="email" class="form-label fw-medium">Email</label>
-                                <input type="email" id="email" class="form-control"
-                                    :class="{ 'is-invalid': errors.email }" v-model="formData.email"
-                                    placeholder="admin@email.com" required />
-                                <div class="form-field-error">
-                                    {{ errors.email }}
-                                </div>
+                            <div class="input-group-text">
+                                <span class="bi bi-person"></span>
                             </div>
+                            <div class="invalid-feedback" v-if="errors.username">{{ errors.username }}</div>
+                        </div>
 
-                            <div class="form-group-wrapper">
-                                <label for="password" class="form-label fw-medium">Mật khẩu</label>
-                                <div class="input-group">
-                                    <input :type="passwordFieldType" id="password" class="form-control"
-                                        :class="{ 'is-invalid': errors.password }" v-model="formData.password"
-                                        placeholder="••••••••" required />
-                                    <button class="btn btn-outline-secondary" type="button"
-                                        @click="togglePasswordVisibility('password')"
-                                        :class="{ 'border-danger': errors.password }">
-                                        <i
-                                            :class="passwordFieldType === 'password' ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-                                    </button>
-                                </div>
-                                <div class="form-field-error">
-                                    {{ errors.password }}
-                                </div>
+                        <div class="input-group mb-3">
+                            <div class="form-floating">
+                                <input id="registerEmail" type="email" class="form-control"
+                                    :class="{ 'is-invalid': errors.email }" v-model="formData.email" placeholder="" />
+                                <label for="registerEmail">Email</label>
                             </div>
-
-                            <div class="form-group-wrapper">
-                                <label for="confirmPassword" class="form-label fw-medium">Xác nhận mật khẩu</label>
-                                <div class="input-group">
-                                    <input :type="confirmPasswordFieldType" id="confirmPassword" class="form-control"
-                                        :class="{ 'is-invalid': errors.confirmPassword }"
-                                        v-model="formData.confirmPassword" placeholder="••••••••" required />
-                                    <button class="btn btn-outline-secondary" type="button"
-                                        @click="togglePasswordVisibility('confirm')"
-                                        :class="{ 'border-danger': errors.confirmPassword }">
-                                        <i
-                                            :class="confirmPasswordFieldType === 'password' ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-                                    </button>
-                                </div>
-                                <div class="form-field-error">
-                                    {{ errors.confirmPassword }}
-                                </div>
+                            <div class="input-group-text">
+                                <span class="bi bi-envelope"></span>
                             </div>
+                            <div class="invalid-feedback" v-if="errors.email">{{ errors.email }}</div>
+                        </div>
 
-                            <p v-if="errors.general" class="text-danger small pt-2 mb-3">{{ errors.general }}</p>
-
-                            <div class="form-check mb-4">
-                                <input class="form-check-input" type="checkbox" id="termsCheckbox"
-                                    v-model="agreedToTerms" :class="{ 'is-invalid': errors.terms }">
-                                <label class="form-check-label small" for="termsCheckbox">
-                                    Tôi đã đọc và đồng ý với
-                                    <a href="/terms" target="_blank" class="text-dark">Thỏa thuận người dùng</a> và
-                                    <a href="/privacy" target="_blank" class="text-dark">Chính sách bảo mật</a>.
-                                </label>
-                                <div class="form-field-error">
-                                    {{ errors.terms }}
-                                </div>
+                        <div class="input-group mb-3">
+                            <div class="form-floating">
+                                <input :type="passwordFieldType" id="registerPassword" class="form-control"
+                                    :class="{ 'is-invalid': errors.password }" v-model="formData.password" placeholder="" />
+                                <label for="registerPassword">Mật khẩu</label>
                             </div>
-
-                            <button type="submit" class="btn btn-dark w-100 fw-bold"
-                                :disabled="isLoading || !agreedToTerms">
-                                <span v-if="isLoading" class="spinner-border spinner-border-sm"
-                                    aria-hidden="true"></span>
-                                <span role="status">{{ isLoading ? ' Đang xử lý...' : 'Tạo tài khoản' }}</span>
+                            <button type="button" class="input-group-text" @click="togglePasswordVisibility('password')">
+                                <span
+                                    :class="passwordFieldType === 'password' ? 'bi bi-eye-slash' : 'bi bi-eye'"></span>
                             </button>
-                        </form>
-                    </div>
+                            <div class="invalid-feedback" v-if="errors.password">{{ errors.password }}</div>
+                        </div>
 
+                        <div class="input-group mb-3">
+                            <div class="form-floating">
+                                <input :type="confirmPasswordFieldType" id="confirmPassword" class="form-control"
+                                    :class="{ 'is-invalid': errors.confirmPassword }" v-model="formData.confirmPassword"
+                                    placeholder="" />
+                                <label for="confirmPassword">Xác nhận mật khẩu</label>
+                            </div>
+                            <button type="button" class="input-group-text" @click="togglePasswordVisibility('confirm')">
+                                <span
+                                    :class="confirmPasswordFieldType === 'password' ? 'bi bi-eye-slash' : 'bi bi-eye'"></span>
+                            </button>
+                            <div class="invalid-feedback" v-if="errors.confirmPassword">{{ errors.confirmPassword }}</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-8 d-inline-flex align-items-center">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="agreeTerms" v-model="agreedToTerms"
+                                        :class="{ 'is-invalid': errors.terms }" />
+                                    <label class="form-check-label" for="agreeTerms">
+                                        Tôi đồng ý với <a href="#">điều khoản</a>
+                                    </label>
+                                    <div class="invalid-feedback" v-if="errors.terms" style="display:block">
+                                        {{ errors.terms }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary" :disabled="isLoading">
+                                        <span v-if="isLoading" class="spinner-border spinner-border-sm"
+                                            aria-hidden="true"></span>
+                                        <span v-else>Đăng ký</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <p v-if="errors.general" class="text-danger mt-3">{{ errors.general }}</p>
+
+                    <p class="mb-0 mt-3">
+                        <router-link to="/admin/login" class="text-center">
+                            Tôi đã có tài khoản
+                        </router-link>
+                    </p>
                 </div>
             </div>
         </div>
@@ -265,57 +231,10 @@ const handleRegister = async () => {
 </template>
 
 <style scoped>
-.register-layout {
+.register-page {
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
-}
-
-.main-content {
-    flex-grow: 1;
-}
-
-.row {
-    flex-grow: 1;
-}
-
-.image-column {
-    background-image: url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto-format&fit=crop&w=1932&q=80');
-    background-size: cover;
-    background-position: center;
-    min-height: 100%;
-}
-
-.form-column {
-    display: flex;
-    align-items: center;
     justify-content: center;
-    padding: 2.5rem;
-}
-
-.form-wrapper {
-    width: 100%;
-    max-width: 440px;
-}
-
-.form-group-wrapper {
-    position: relative;
-    margin-bottom: 0;
-    padding-bottom: 1.5rem;
-}
-
-.form-field-error {
-    position: absolute;
-    bottom: 0.15rem;
-    left: 0;
-    width: 100%;
-    font-size: 0.875em;
-    color: var(--bs-danger);
-    height: 1.25rem;
-    padding-top: 0.1rem;
-}
-
-.input-group .form-control.is-invalid+.btn.btn-outline-secondary {
-    border-color: var(--bs-danger);
+    align-items: center;
 }
 </style>

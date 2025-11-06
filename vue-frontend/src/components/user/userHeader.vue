@@ -22,7 +22,7 @@
       <div class="container relative-container">
 
         <router-link to="/" class="logo">
-          <img src="/icon.png" alt="ThinkHub Logo" @error="$event.target.style.display = 'none'">
+          <img src="../img/LogoThinkHub.png" alt="ThinkHub Logo" @error="$event.target.style.display = 'none'">
         </router-link>
 
         <div class="side-menu-container" ref="menuContainer">

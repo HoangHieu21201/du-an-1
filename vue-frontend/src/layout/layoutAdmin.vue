@@ -1,16 +1,51 @@
 <script setup>
-import AdminHeader from '../components/AdminHeader.vue';
-import AdminFooter from '../components/adminFooter.vue';
+import { onMounted, onUnmounted } from 'vue';
+import AdminHeader from '../components/admin/adminHeader.vue';
+import AdminFooter from '../components/admin/adminFooter.vue';
+import AdminSidebar from '../components/admin/AdminSidebar.vue'; // Import Sidebar mới tạo
 
+// Thêm các class cần thiết cho body khi vào trang admin
+onMounted(() => {
+  document.body.classList.add('layout-fixed', 'sidebar-expand-lg', 'bg-body-tertiary');
+});
+
+// Xóa các class khi rời khỏi trang admin để không ảnh hưởng trang user
+onUnmounted(() => {
+  document.body.classList.remove('layout-fixed', 'sidebar-expand-lg', 'bg-body-tertiary');
+});
 </script>
 
 <template>
-    <AdminHeader />
-    <router-link to="/admin/users">Admin User</router-link>
-    <router-link to="/admin/products">Admin Product</router-link>
+  <div class="app-wrapper"> <AdminHeader />
+    <AdminSidebar />
     
-    <router-view></router-view>
+    <main class="app-main"> <div class="app-content-header">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-6">
+              <h3 class="mb-0">Dashboard</h3>
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-end">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="app-content">
+        <div class="container-fluid">
+            <router-view></router-view>
+        </div>
+      </div>
+    </main>
+
     <AdminFooter />
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* Có thể thêm style riêng cho layout nếu cần */
+</style>

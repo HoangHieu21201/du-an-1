@@ -1,14 +1,19 @@
+// src/main.js
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from "./router/index.js"
 
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap/dist/js/bootstrap.bundle.min.js"
 import "bootstrap-icons/font/bootstrap-icons.css"
-import "@fortawesome/fontawesome-free/css/all.min.css";
+import "@fortawesome/fontawesome-free/css/all.min.css"
+
+// Import AdminLTE
+import './assets/css/adminlte.min.css'
+import './assets/js/adminlte.min.js' 
 
 import './style.css'
 
 const app = createApp(App);
-app.use(router),
+app.use(router)
 app.mount('#app')
