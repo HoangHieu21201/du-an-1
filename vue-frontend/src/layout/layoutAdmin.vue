@@ -16,25 +16,14 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="app-wrapper"> <AdminHeader />
+  <div class="app-wrapper">
+    <AdminHeader />
     <AdminSidebar />
-    
-    <main class="app-main"> <div class="app-content-header">
-        <div class="container-fluid">
-          <div class="row "> 
-            <!-- <div class="col-sm-6">
-              <ol class="breadcrumb float-sm-end">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-              </ol>
-            </div> -->
-          </div>
-        </div>
-      </div>
-      
+
+    <main class="app-main">
       <div class="app-content">
         <div class="container-fluid">
-            <router-view></router-view>
+          <router-view></router-view>
         </div>
       </div>
     </main>

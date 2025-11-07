@@ -62,3 +62,10 @@
     </div>
   </aside>
 </template>
+<style scoped>
+.nav-item p{
+  font-size: 18px;
+  font-weight: 700;
+  margin: 8px 0;
+}
+</style>
