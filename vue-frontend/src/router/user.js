@@ -18,6 +18,11 @@ const users = [
         name: "notFound",
         component: () => import("../page/user/notFound.vue"),
       },
+      {
+        path: "profile",
+        name: "profile",
+        component: () => import("../page/user/profile.vue"),
+      },
     ],
   },
 ];
