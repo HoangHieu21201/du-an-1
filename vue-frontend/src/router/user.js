@@ -13,6 +13,11 @@ const users = [
                 name: "about",
                 component: () => import("../page/user/about.vue")
             },
+            {
+                path: "contact",
+                name: "contact",
+                component: () => import("../page/user/Contact.vue"),
+            },
         ]
     }
 ]

@@ -11,6 +11,9 @@ import './assets/css/adminlte.min.css'
 import './assets/js/adminlte.min.js' 
 
 import './style.css'
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap-icons/font/bootstrap-icons.css"
+
 
 const app = createApp(App);
 app.use(router)

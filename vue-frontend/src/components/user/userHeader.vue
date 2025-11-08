@@ -7,6 +7,7 @@
             <li><a href="#">Kênh Người Bán</a></li>
             <li><a href="#">Tải ứng dụng</a></li>
             <li><a href="#">Kết nối</a></li>
+            <li><router-link to="/contact">Liên hệ</router-link></li>
           </ul>
         </div>
         <div class="top-bar-info">
