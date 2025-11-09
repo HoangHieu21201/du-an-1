@@ -63,7 +63,7 @@
                 </div>
 
                 <p class="register-link">
-                    Bạn chưa có tài khoản? <a href="#">Đăng ký ngay</a>
+                    Bạn chưa có tài khoản? <router-link :to="{name: 'register'}">Đăng kí ngay</router-link>
                 </p>
             </div>
         </div>

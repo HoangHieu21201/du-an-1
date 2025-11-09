@@ -1,5 +1,5 @@
 <script setup>
-// Để trống vì m chỉ cần giao diện, không cần logic
+
 </script>
 
 <template>
@@ -77,7 +77,7 @@
         </div>
 
         <p class="register-link">
-          Bạn đã có tài khoản? <a href="#">Đăng nhập ngay</a>
+          Bạn đã có tài khoản? <router-link :to="{name: 'login'}">Đăng nhập ngay</router-link>
         </p>
       </div>
     </div>
@@ -85,12 +85,10 @@
 </template>
 
 <style scoped>
-/* CSS Y HỆT NHƯ CODE M ĐƯA, KHÔNG THAY ĐỔI GÌ
-*/
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
 :root {
-    --primary-color: #009981; /* Màu xanh lá m yêu cầu */
+    --primary-color: #009981;
     --text-color: #333;
     --border-color: #ddd;
     --bg-light: #f9f9f9;
@@ -120,7 +118,6 @@
     margin: 20px;
 }
 
-/* --- Cột bên trái (Promo) --- */
 .promo-section {
     padding: 40px;
 }
@@ -151,13 +148,12 @@
 
 .benefits-list li {
     position: relative;
-    padding-left: 30px; /* Chỗ cho icon */
+    padding-left: 30px; 
     margin-bottom: 15px;
     font-size: 0.9rem;
     font-weight: 500;
 }
 
-/* Dùng emoji 🎁 làm icon thay thế */
 .benefits-list li::before {
     content: '🎁';
     position: absolute;
