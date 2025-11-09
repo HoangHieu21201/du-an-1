@@ -66,7 +66,7 @@
       <section class="brand-banner" style="margin-top: 15px;">
         <a href="#">
           <img
-            src="#"
+            src="https://images.fpt.shop/unsafe/fit-in/1200x200/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2024/5/1/638501810787167732_F-H5_1200x200%20(1).png"
             alt="Brand Banner"
           >
         </a>
@@ -84,80 +84,65 @@
             SẢN PHẨM THEO NHÓM
       =========================== -->
       <section class="product-section">
-  <!-- ===== HÀNG 1: ĐIỆN THOẠI NỔI BẬT ===== -->
-  <div class="section-block">
-    <div class="section-header">
-      <h2 class="section-title">📱 Điện thoại nổi bật nhất</h2>
-      <a href="#" class="see-more">Xem tất cả</a>
-    </div>
-    <div class="product-grid">
-      <div
-        class="product-card"
-        v-for="product in topPhones"
-        :key="product.id"
-      >
-        <img :src="product.image_url || 'https://placehold.co/200x200?text=No+Image'" :alt="product.name">
-        <h3 class="product-name">{{ product.name }}</h3>
-        <div class="product-price">
-          <span class="new-price">{{ formatCurrency(getMinPrice(product.variants)) }}</span>
+        <!-- 1️⃣ Điện thoại nổi bật nhất -->
+        <h2 class="section-title">📱 Điện thoại nổi bật nhất</h2>
+        <div class="product-grid">
+          <div
+            class="product-card"
+            v-for="product in topPhones"
+            :key="product.id"
+          >
+            <img :src="product.image_url || 'https://placehold.co/200x200?text=No+Image'" :alt="product.name">
+            <h3 class="product-name">{{ product.name }}</h3>
+            <div class="product-price">
+              <span class="new-price">{{ formatCurrency(getMinPrice(product.variants)) }}</span>
+            </div>
+            <div class="card-actions-small">
+              <button class="btn-view" @click="openQuickView(product)">
+                <i class="fas fa-eye"></i> Xem
+              </button>
+              <button class="btn-add-cart" @click="addToCart(product)">
+                <i class="fas fa-plus"></i> Thêm giỏ
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="card-actions-small">
-          <button class="btn-view" @click="openQuickView(product)">
-            <i class="fas fa-eye"></i> Xem
-          </button>
-          <button class="btn-add-cart" @click="addToCart(product)">
-            <i class="fas fa-plus"></i> Thêm giỏ
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- ===== HÀNG 2: LAPTOP BÁN CHẠY ===== -->
-  <div class="section-block">
-    <div class="section-header">
-      <h2 class="section-title">💻 Laptop bán chạy nhất</h2>
-      <a href="#" class="see-more">Xem tất cả</a>
-    </div>
-    <div class="product-grid">
-      <div
-        class="product-card"
-        v-for="product in topLaptops"
-        :key="product.id"
-      >
-        <img :src="product.image_url || 'https://placehold.co/200x200?text=No+Image'" :alt="product.name">
-        <h3 class="product-name">{{ product.name }}</h3>
-        <div class="product-price">
-          <span class="new-price">{{ formatCurrency(getMinPrice(product.variants)) }}</span>
+        <!-- 2️⃣ Laptop bán chạy nhất -->
+        <h2 class="section-title" style="margin-top:40px;">💻 Laptop bán chạy nhất</h2>
+        <div class="product-grid">
+          <div
+            class="product-card"
+            v-for="product in topLaptops"
+            :key="product.id"
+          >
+            <img :src="product.image_url || 'https://placehold.co/200x200?text=No+Image'" :alt="product.name">
+            <h3 class="product-name">{{ product.name }}</h3>
+            <div class="product-price">
+              <span class="new-price">{{ formatCurrency(getMinPrice(product.variants)) }}</span>
+            </div>
+            <div class="card-actions-small">
+              <button class="btn-view" @click="openQuickView(product)">
+                <i class="fas fa-eye"></i> Xem
+              </button>
+              <button class="btn-add-cart" @click="addToCart(product)">
+                <i class="fas fa-plus"></i> Thêm giỏ
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="card-actions-small">
-          <button class="btn-view" @click="openQuickView(product)">
-            <i class="fas fa-eye"></i> Xem
-          </button>
-          <button class="btn-add-cart" @click="addToCart(product)">
-            <i class="fas fa-plus"></i> Thêm giỏ
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- ===== HÀNG 3: TIN TỨC CÔNG NGHỆ ===== -->
-  <div class="section-block">
-    <div class="section-header">
-      <h2 class="section-title">📰 Tin tức công nghệ</h2>
-      <a href="#" class="see-more">Xem tất cả</a>
-    </div>
-    <div class="news-grid">
-      <div class="news-card" v-for="news in newsList" :key="news.id">
-        <img :src="news.image || 'https://placehold.co/300x150?text=No+Image'" :alt="news.title">
-        <h3 class="news-title">{{ news.title }}</h3>
-        <p class="news-excerpt">{{ news.excerpt }}</p>
-        <a href="#" class="read-more">Đọc thêm</a>
-      </div>
-    </div>
-  </div>
-</section>
+        <!-- 3️⃣ Tin tức công nghệ -->
+        <h2 class="section-title" style="margin-top:40px;">📰 Tin tức công nghệ</h2>
+        <div class="news-grid">
+          <div class="news-card" v-for="news in newsList" :key="news.id">
+            <img :src="news.image || 'https://placehold.co/300x150?text=No+Image'" :alt="news.title">
+            <h3 class="news-title">{{ news.title }}</h3>
+            <p class="news-excerpt">{{ news.excerpt }}</p>
+            <a href="#" class="read-more">Đọc thêm</a>
+          </div>
+        </div>
+      </section>
 
     </main>
   </div>
@@ -181,39 +166,22 @@ const interval = ref(null);
 // 🟢 Fetch data từ json-server
 const fetchData = async () => {
   try {
-    // Dùng Promise.allSettled để tránh lỗi dừng toàn bộ khi 1 API lỗi
-    const [catRes, slideRes, prodRes, userRes, newsRes] = await Promise.allSettled([
+    const [catRes, slideRes, prodRes, userRes, newsRes] = await Promise.all([
       fetch(`${API_URL}/categories`),
       fetch(`${API_URL}/slides`),
       fetch(`${API_URL}/products`),
       fetch(`${API_URL}/account_admin`),
       fetch(`${API_URL}/news`) // 📰 Tin tức công nghệ
     ]);
-
-    // Hàm phụ: kiểm tra response có hợp lệ không
-    const parseJSON = async (res) => {
-      if (res && res.status === "fulfilled" && res.value.ok) {
-        try {
-          return await res.value.json();
-        } catch {
-          return [];
-        }
-      }
-      return [];
-    };
-
-    // Gán dữ liệu an toàn
-    categories.value = await parseJSON(catRes);
-    slides.value = await parseJSON(slideRes);
-    products.value = await parseJSON(prodRes);
-    users.value = await parseJSON(userRes);
-    newsList.value = await parseJSON(newsRes);
-
+    categories.value = await catRes.json();
+    slides.value = await slideRes.json();
+    products.value = await prodRes.json();
+    users.value = await userRes.json();
+    newsList.value = await newsRes.json();
   } catch (err) {
     console.error("Lỗi khi lấy dữ liệu:", err);
   }
 };
-
 
 // 🌀 Slider controls
 const startAutoSlide = () => {
