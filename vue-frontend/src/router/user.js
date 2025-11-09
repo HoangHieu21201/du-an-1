@@ -45,6 +45,21 @@ const users = [
         name: "catchAll",
         component: () => import("../page/user/notFound.vue"),
       },
+      {
+        path: "cart",
+        name: "cart",
+        component: () => import("../page/user/Cart.vue"),
+      },
+      {
+        path: "checkout",
+        name: "checkout",
+        component: () => import("../page/user/Checkout.vue"),
+      },
+       {
+        path: "/orders",
+        name: "CustomerOrders",
+        component: () => import("../page/user/CustomerOrders.vue"),
+      },
     ],
   },
 ];
