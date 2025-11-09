@@ -1,4 +1,5 @@
 <template>
+<<<<<<< Updated upstream
     <div id="app">
         <main class="container">
             <section class="top-section-layout">
@@ -521,8 +522,245 @@ export default {
             this.cartItems.splice(index, 1);
         }
     }
+=======
+  <div id="app">
+    <main class="container">
+
+      <!-- ===== TOP SECTION: CATEGORIES + SLIDER + UTILITY ===== -->
+      <section class="top-section-layout">
+        <!-- Cột trái: DANH MỤC -->
+        <nav class="categories-sidebar">
+          <h3 class="sidebar-title">Danh mục</h3>
+          <div
+            class="category-item-sodo"
+            v-for="category in categories"
+            :key="category.id"
+            :class="{ active: category.id === activeCategoryId }"
+            @click="setActiveCategory(category.id)"
+          >
+            <i :class="getCategoryIcon(category.name)" class="icon"></i>
+            <span>{{ category.name }}</span>
+          </div>
+        </nav>
+
+        <!-- Cột giữa: SLIDER -->
+        <section class="slider" @mouseenter="stopAutoSlide" @mouseleave="startAutoSlide">
+          <div class="slider-wrapper" :style="{ transform: 'translateX(-' + currentSlide * 100 + '%)' }">
+            <div
+              class="slide"
+              v-for="(slide, index) in slides"
+              :key="slide.id"
+              :style="{ backgroundImage: 'url(' + slide.imageUrl + ')' }"
+            >
+              <div class="slide-content">
+                <h2>{{ slide.title }}</h2>
+                <p>{{ slide.description }}</p>
+              </div>
+            </div>
+          </div>
+
+          <button class="slider-control prev" @click="prevSlide">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="slider-control next" @click="nextSlide">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+
+          <div class="slider-nav">
+            <span
+              v-for="(slide, index) in slides"
+              :key="slide.id"
+              class="slider-nav-dot"
+              :class="{ active: index === currentSlide }"
+              @click="goToSlide(index)"
+            ></span>
+          </div>
+        </section>
+
+        <!-- Cột phải: TIỆN ÍCH -->
+        <aside class="utility-sidebar">
+          <div class="user-info-card" v-if="users.length">
+            <p class="user-name">{{ users[0].username }}</p>
+            <p class="user-tier">⭐ {{ users[0].role || 'Null' }}</p>
+          </div>
+        </aside>
+      </section>
+
+      <!-- BRAND BANNER -->
+      <section class="brand-banner" style="margin-top: 15px;">
+        <a href="#">
+          <img
+            src="https://images.fpt.shop/unsafe/fit-in/1200x200/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2024/5/1/638501810787167732_F-H5_1200x200%20(1).png"
+            alt="Brand Banner"
+          >
+        </a>
+      </section>
+
+      <!-- TRUST BLOCK -->
+      <section class="trust-block">
+        <div class="trust-item"><span>✔️ Bảo hành chính hãng</span></div>
+        <div class="trust-item"><span>🚚 Giao hàng miễn phí</span></div>
+        <div class="trust-item"><span>🔄 Đổi trả 30 ngày</span></div>
+        <div class="trust-item"><span>🏪 Hơn 100+ cửa hàng</span></div>
+      </section>
+
+      <!-- ==========================
+            SẢN PHẨM THEO NHÓM
+      =========================== -->
+      <section class="product-section">
+        <!-- 1️⃣ Điện thoại nổi bật nhất -->
+        <h2 class="section-title">📱 Điện thoại nổi bật nhất</h2>
+        <div class="product-grid">
+          <div
+            class="product-card"
+            v-for="product in topPhones"
+            :key="product.id"
+          >
+            <img :src="product.image_url || 'https://placehold.co/200x200?text=No+Image'" :alt="product.name">
+            <h3 class="product-name">{{ product.name }}</h3>
+            <div class="product-price">
+              <span class="new-price">{{ formatCurrency(getMinPrice(product.variants)) }}</span>
+            </div>
+            <div class="card-actions-small">
+              <button class="btn-view" @click="openQuickView(product)">
+                <i class="fas fa-eye"></i> Xem
+              </button>
+              <button class="btn-add-cart" @click="addToCart(product)">
+                <i class="fas fa-plus"></i> Thêm giỏ
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2️⃣ Laptop bán chạy nhất -->
+        <h2 class="section-title" style="margin-top:40px;">💻 Laptop bán chạy nhất</h2>
+        <div class="product-grid">
+          <div
+            class="product-card"
+            v-for="product in topLaptops"
+            :key="product.id"
+          >
+            <img :src="product.image_url || 'https://placehold.co/200x200?text=No+Image'" :alt="product.name">
+            <h3 class="product-name">{{ product.name }}</h3>
+            <div class="product-price">
+              <span class="new-price">{{ formatCurrency(getMinPrice(product.variants)) }}</span>
+            </div>
+            <div class="card-actions-small">
+              <button class="btn-view" @click="openQuickView(product)">
+                <i class="fas fa-eye"></i> Xem
+              </button>
+              <button class="btn-add-cart" @click="addToCart(product)">
+                <i class="fas fa-plus"></i> Thêm giỏ
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3️⃣ Tin tức công nghệ -->
+        <h2 class="section-title" style="margin-top:40px;">📰 Tin tức công nghệ</h2>
+        <div class="news-grid">
+          <div class="news-card" v-for="news in newsList" :key="news.id">
+            <img :src="news.image || 'https://placehold.co/300x150?text=No+Image'" :alt="news.title">
+            <h3 class="news-title">{{ news.title }}</h3>
+            <p class="news-excerpt">{{ news.excerpt }}</p>
+            <a href="#" class="read-more">Đọc thêm</a>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+
+const API_URL = 'http://localhost:3000';
+
+const categories = ref([]);
+const slides = ref([]);
+const products = ref([]);
+const users = ref([]);
+const newsList = ref([]);
+
+const activeCategoryId = ref(null);
+const currentSlide = ref(0);
+const interval = ref(null);
+
+// 🟢 Fetch data từ json-server
+const fetchData = async () => {
+  try {
+    const [catRes, slideRes, prodRes, userRes, newsRes] = await Promise.all([
+      fetch(`${API_URL}/categories`),
+      fetch(`${API_URL}/slides`),
+      fetch(`${API_URL}/products`),
+      fetch(`${API_URL}/account_admin`),
+      fetch(`${API_URL}/news`) // 📰 Tin tức công nghệ
+    ]);
+    categories.value = await catRes.json();
+    slides.value = await slideRes.json();
+    products.value = await prodRes.json();
+    users.value = await userRes.json();
+    newsList.value = await newsRes.json();
+  } catch (err) {
+    console.error("Lỗi khi lấy dữ liệu:", err);
+  }
 };
+
+// 🌀 Slider controls
+const startAutoSlide = () => {
+  if (!slides.value.length) return;
+  interval.value = setInterval(() => {
+    currentSlide.value = (currentSlide.value + 1) % slides.value.length;
+  }, 4000);
+>>>>>>> Stashed changes
+};
+const stopAutoSlide = () => clearInterval(interval.value);
+const nextSlide = () => { currentSlide.value = (currentSlide.value + 1) % slides.value.length; };
+const prevSlide = () => { currentSlide.value = (currentSlide.value - 1 + slides.value.length) % slides.value.length; };
+const goToSlide = (index) => { currentSlide.value = index; };
+
+// 📦 Category controls
+const setActiveCategory = (id) => { activeCategoryId.value = String(id); };
+const getCategoryIcon = (name) => {
+  if(name.includes('Điện thoại')) return 'fas fa-mobile-alt';
+  if(name.includes('Laptop')) return 'fas fa-laptop';
+  if(name.includes('Watch')) return 'fas fa-watch';
+  if(name.includes('Phụ kiện')) return 'fas fa-headphones';
+  if(name.includes('Máy tính bảng')) return 'fas fa-tablet';
+  return 'fas fa-box';
+};
+
+// 💰 Helpers
+const getMinPrice = (variants) => {
+  if(!variants || !variants.length) return 0;
+  return Math.min(...variants.map(v => v.price));
+};
+const formatCurrency = (value) =>
+  new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+
+// 🧠 Dữ liệu đã lọc theo nhóm
+const topPhones = computed(() =>
+  products.value.filter(p => p.category?.name?.includes('Điện thoại')).slice(0, 8)
+);
+const topLaptops = computed(() =>
+  products.value.filter(p => p.category?.name?.includes('Laptop')).slice(0, 8)
+);
+
+// 🔍 Actions
+const openQuickView = (product) => { alert(`Xem chi tiết ${product.name}`); };
+const addToCart = (product) => { alert(`Đã thêm ${product.name} vào giỏ`); };
+
+onMounted(async () => {
+  await fetchData();
+  startAutoSlide();
+});
+onBeforeUnmount(stopAutoSlide);
 </script>
+
+
+
+
 <style scoped>
 /* ------------------- Global & Variables ------------------- */
 :root {
@@ -1495,4 +1733,61 @@ a {
         text-align: center;
     }
 }
+.top-section-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr 250px;
+  gap: 20px;
+  align-items: start;
+}
+
+.categories-sidebar {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 10px;
+}
+
+.category-item-sodo {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.category-item-sodo:hover,
+.category-item-sodo.active {
+  background-color: #f0f8ff;
+}
+
+.slider {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.slider-wrapper {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+  min-width: 100%;
+  background-size: cover;
+  background-position: center;
+  height: 250px;
+  display: flex;
+  align-items: flex-end;
+  color: white;
+  padding: 20px;
+}
+
+.utility-sidebar {
+  background: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
 </style>
