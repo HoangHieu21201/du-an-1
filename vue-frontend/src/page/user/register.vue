@@ -1,272 +1,341 @@
-<template>
-    <div class="container" style="max-width: 900px;">
-        <div class="card shadow-lg border-0 rounded-4 overflow-hidden my-5">
-            <div class="row g-0">
-
-                <div class="col-lg-5 d-none d-lg-flex flex-column justify-content-center text-white p-5 rounded-start-4"
-                    style="background-color: #009981;">
-                    <h1 class="fw-bolder display-4 mb-4">Chào mừng!</h1>
-                    <p class="fs-5 opacity-90">
-                        Đăng ký để bắt đầu quản lý công việc của bạn một cách hiệu quả nhất.
-                    </p>
-                    <div class="mt-5 text-center">
-                        <span class="d-inline-block rounded-pill mx-1"
-                            style="width: 25px; height: 5px; background-color: rgba(255, 255, 255, 0.5);"></span>
-                        <span class="d-inline-block rounded-pill mx-1"
-                            style="width: 25px; height: 5px; background-color: rgba(255, 255, 255, 0.7);"></span>
-                        <span class="d-inline-block rounded-pill mx-1"
-                            style="width: 25px; height: 5px; background-color: rgba(255, 255, 255, 0.5);"></span>
-                    </div>
-                </div>
-
-                <div class="col-lg-7 bg-white p-4 p-md-5 rounded-end-4">
-                    <h2 class="fw-bold text-dark mb-5 text-center text-lg-start h1">Tạo tài khoản mới</h2>
-
-                    <form @submit.prevent="handleRegister">
-                        <div class="mb-4">
-                            <label for="registerUsername" class="form-label fw-medium text-muted">Tên hiển thị</label>
-                            <div class="input-group input-group-lg">
-                                <span class="input-group-text border-end-0 bg-transparent"><i
-                                        class="bi bi-person-fill text-secondary"></i></span>
-                                <input id="registerUsername" type="text" v-model="formData.username"
-                                    placeholder="Nhập tên hiển thị của bạn"
-                                    :class="['form-control border-start-0', errors.username ? 'is-invalid' : '']" />
-                            </div>
-                            <div v-if="errors.username" class="invalid-feedback d-block mt-1">{{ errors.username }}
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="registerEmail" class="form-label fw-medium text-muted">Email</label>
-                            <div class="input-group input-group-lg">
-                                <span class="input-group-text border-end-0 bg-transparent"><i
-                                        class="bi bi-envelope-fill text-secondary"></i></span>
-                                <input id="registerEmail" type="email" v-model="formData.email"
-                                    placeholder="Nhập địa chỉ email của bạn"
-                                    :class="['form-control border-start-0', errors.email ? 'is-invalid' : '']" />
-                            </div>
-                            <div v-if="errors.email" class="invalid-feedback d-block mt-1">{{ errors.email }}</div>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="registerPassword" class="form-label fw-medium text-muted">Mật khẩu</label>
-                            <div class="input-group input-group-lg">
-                                <span class="input-group-text border-end-0 bg-transparent"><i
-                                        class="bi bi-lock-fill text-secondary"></i></span>
-                                <input id="registerPassword" :type="passwordFieldType" v-model="formData.password"
-                                    placeholder="Tối thiểu 8 ký tự"
-                                    :class="['form-control border-start-0', errors.password ? 'is-invalid' : '']" />
-                                <button type="button" @click="togglePasswordVisibility('password')"
-                                    class="btn btn-outline-secondary border-start-0 bg-transparent">
-                                    <i
-                                        :class="passwordFieldType === 'password' ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
-                                </button>
-                            </div>
-                            <div v-if="errors.password" class="invalid-feedback d-block mt-1">{{ errors.password }}
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="confirmPassword" class="form-label fw-medium text-muted">Xác nhận mật
-                                khẩu</label>
-                            <div class="input-group input-group-lg">
-                                <span class="input-group-text border-end-0 bg-transparent"><i
-                                        class="bi bi-lock-fill text-secondary"></i></span>
-                                <input id="confirmPassword" :type="confirmPasswordFieldType"
-                                    v-model="formData.confirmPassword" placeholder="Nhập lại mật khẩu của bạn"
-                                    :class="['form-control border-start-0', errors.confirmPassword ? 'is-invalid' : '']" />
-                                <button type="button" @click="togglePasswordVisibility('confirm')"
-                                    class="btn btn-outline-secondary border-start-0 bg-transparent">
-                                    <i
-                                        :class="confirmPasswordFieldType === 'password' ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
-                                </button>
-                            </div>
-                            <div v-if="errors.confirmPassword" class="invalid-feedback d-block mt-1">{{
-                                errors.confirmPassword }}</div>
-                        </div>
-
-                        <div class="mb-4">
-                            <div class="form-check">
-                                <input id="agreeTerms" type="checkbox" v-model="agreedToTerms"
-                                    :class="['form-check-input', errors.terms ? 'is-invalid' : '']" />
-                                <label for="agreeTerms" class="form-check-label text-muted">
-                                    Tôi đồng ý với
-                                    <a href="#" class="text-decoration-none fw-medium" style="color: #009981;">điều
-                                        khoản dịch vụ</a>
-                                </label>
-                            </div>
-                            <div v-if="errors.terms" class="invalid-feedback d-block mt-1">{{ errors.terms }}</div>
-                        </div>
-
-                        <div class="d-grid mt-4">
-                            <button type="submit" :disabled="isLoading"
-                                class="btn btn-primary-custom btn-lg fw-medium rounded-pill">
-                                <span v-if="isLoading" class="spinner-border spinner-border-sm me-2" role="status"
-                                    aria-hidden="true"></span>
-                                <span>{{ isLoading ? 'Đang xử lý...' : 'Đăng ký' }}</span>
-                            </button>
-                        </div>
-                    </form>
-
-                    <p class="text-center text-muted mt-5 mb-0">
-                        Đã có tài khoản?
-                        <router-link :to="{ name: 'admin-login' }" class="fw-bold text-decoration-none"
-                            style="color: #009981;">
-                            Đăng nhập ngay
-                        </router-link>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
-
-<script>
-export default {
-    name: 'RegisterUser',
-    data() {
-        return {
-            formData: {
-                username: '',
-                email: '',
-                password: '',
-                confirmPassword: ''
-            },
-            errors: {},
-            agreedToTerms: false,
-            isLoading: false,
-            passwordFieldType: 'password',
-            confirmPasswordFieldType: 'password'
-        };
-    },
-    methods: {
-        validateForm() {
-            this.errors = {};
-            if (!this.formData.username) {
-                this.errors.username = 'Tên hiển thị không được để trống.';
-            }
-            if (!this.formData.email) {
-                this.errors.email = 'Email không được để trống.';
-            } else if (!/\S+@\S+\.\S+/.test(this.formData.email)) {
-                this.errors.email = 'Email không hợp lệ.';
-            }
-            if (!this.formData.password) {
-                this.errors.password = 'Mật khẩu không được để trống.';
-            } else if (this.formData.password.length < 8) {
-                this.errors.password = 'Mật khẩu phải có ít nhất 8 ký tự.';
-            }
-            if (!this.formData.confirmPassword) {
-                this.errors.confirmPassword = 'Xác nhận mật khẩu không được để trống.';
-            } else if (this.formData.password !== this.formData.confirmPassword) {
-                this.errors.confirmPassword = 'Mật khẩu xác nhận không khớp.';
-            }
-            if (!this.agreedToTerms) {
-                this.errors.terms = 'Bạn phải đồng ý với điều khoản dịch vụ.';
-            }
-            return Object.keys(this.errors).length === 0;
-        },
-        handleRegister() {
-            if (this.validateForm()) {
-                this.isLoading = true;
-                // Simulate API call
-                setTimeout(() => {
-                    alert('Đăng ký thành công!');
-                    this.isLoading = false;
-                    // You would typically redirect here
-                    // this.$router.push({ name: 'admin-dashboard' });
-                }, 2000);
-            }
-        },
-        togglePasswordVisibility(field) {
-            if (field === 'password') {
-                this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
-            } else if (field === 'confirm') {
-                this.confirmPasswordFieldType = this.confirmPasswordFieldType === 'password' ? 'text' : 'password';
-            }
-        }
-    }
-}
+<script setup>
+// Để trống vì m chỉ cần giao diện, không cần logic
 </script>
 
+<template>
+  <div class="login-page-wrapper">
+    <div class="login-container">
+      
+      <div class="promo-section">
+        <h2>Chào mừng bạn mới!</h2>
+        <p>Tạo tài khoản để quản lý đơn hàng và nhận ưu đãi độc quyền.</p>
+
+        <div class="benefits-box">
+          <ul class="benefits-list">
+            <li>Quản lý và theo dõi đơn hàng tiện lợi.</li>
+            <li>Nhận thông báo khuyến mãi sớm nhất.</li>
+            <li>Lưu danh sách sản phẩm yêu thích.</li>
+            <li>Tích điểm đổi quà và thăng hạng thành viên.</li>
+            <li>Bảo hành điện tử nhanh chóng, tiện lợi.</li>
+            <li>Đặc quyền T-Student/T-Teacher ưu đãi thêm đến 10%</li>
+          </ul>
+        </div>
+
+        <a href="#" class="details-link">Xem chi tiết chính sách ưu đãi Tmember ></a>
+        
+      </div>
+
+      <div class="login-section">
+        <h2>Đăng ký</h2>
+
+        <form action="#" method="POST" class="login-form" @submit.prevent>
+          <div class="form-group">
+            <label for="fullname">Họ và tên</label>
+            <input type="text" id="fullname" name="fullname" placeholder="Nhập họ và tên của bạn" required>
+          </div>
+
+          <div class="form-group">
+            <label for="fullname">Email</label>
+            <input type="text" id="Email" name="Email" placeholder="Nhập email của bạn" required>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Số điện thoại</label>
+            <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại của bạn" required>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Mật khẩu</label>
+            <div class="password-wrapper">
+              <input type="password" id="password" name="password" placeholder="Nhập mật khẩu của bạn" required>
+              <span class="toggle-password"><i class="fa-solid fa-eye"></i></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirm-password">Xác nhận mật khẩu</label>
+            <div class="password-wrapper">
+              <input type="password" id="confirm-password" name="confirm-password" placeholder="Nhập lại mật khẩu của bạn" required>
+              <span class="toggle-password"><i class="fa-solid fa-eye"></i></span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-login">Đăng ký</button>
+        </form>
+
+        <div class="separator">Hoặc đăng ký bằng</div>
+
+        <div class="social-login">
+          <button class="social-btn">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
+            Google
+          </button>
+          <button class="social-btn">
+              <img src="../../assets/facebook-svgrepo-com.svg" alt="Facebook">
+            Facebook
+          </button>
+        </div>
+
+        <p class="register-link">
+          Bạn đã có tài khoản? <a href="#">Đăng nhập ngay</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
+
 <style scoped>
-.btn-primary-custom {
+/* CSS Y HỆT NHƯ CODE M ĐƯA, KHÔNG THAY ĐỔI GÌ
+*/
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+    --primary-color: #009981; /* Màu xanh lá m yêu cầu */
+    --text-color: #333;
+    --border-color: #ddd;
+    --bg-light: #f9f9f9;
+}
+
+.login-page-wrapper {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--bg-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    color: var(--text-color);
+}
+
+.login-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 1000px;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 20px;
+}
+
+/* --- Cột bên trái (Promo) --- */
+.promo-section {
+    padding: 40px;
+}
+
+.promo-section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-top: 0;
+}
+
+.promo-section p {
+    font-size: 1rem;
+    margin-bottom: 25px;
+}
+
+.benefits-box {
+    border: 2px dashed var(--primary-color);
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.benefits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.benefits-list li {
+    position: relative;
+    padding-left: 30px; /* Chỗ cho icon */
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Dùng emoji 🎁 làm icon thay thế */
+.benefits-list li::before {
+    content: '🎁';
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 1.2rem;
+}
+
+.details-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.details-link:hover {
+    text-decoration: underline;
+}
+
+.login-section {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-left: 1px solid var(--border-color);
+}
+
+.login-section h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-align: left;
+    margin-bottom: 25px;
+}
+
+.login-form .form-group {
+    margin-bottom: 20px;
+}
+
+.login-form label {
+    display: none;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid black;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box; 
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper .toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-login:hover {
+    opacity: 0.9;
+}
+
+.forgot-password {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.separator {
+    text-align: center;
+    margin: 25px 0;
+    color: #aaa;
+    font-size: 0.85rem;
+    position: relative;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background-color: var(--border-color);
+}
+
+.separator::before {
+    left: 0;
+}
+
+.separator::after {
+    right: 0;
+}
+
+.social-login {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.social-btn {
+    padding: 10px;
+    border: 1px solid #009981;
+    border-radius: 8px;
+    background-color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.social-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.social-btn:hover {
     background-color: #009981;
-    border-color: #009981;
     color: white;
-    transition: all 0.3s ease;
 }
 
-.btn-primary-custom:hover,
-.btn-primary-custom:focus {
-    background-color: #007d6a;
-    border-color: #007d6a;
-    color: white;
-    box-shadow: 0 4px 8px rgba(0, 153, 129, 0.2);
+.register-link {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 0.9rem;
 }
 
-.btn-primary-custom:disabled,
-.btn-primary-custom.disabled {
-    background-color: #009981;
-    border-color: #009981;
-    opacity: 0.6;
-    cursor: not-allowed;
+.register-link a {
+    color: var(--primary-color);
+    font-weight: 700;
+    text-decoration: none;
 }
 
-.form-control:focus,
-.form-check-input:focus {
-    border-color: #009981;
-    box-shadow: 0 0 0 0.25rem rgba(0, 153, 129, 0.25);
+.register-link a:hover {
+    text-decoration: underline;
 }
 
-.form-check-input:checked {
-    background-color: #009981;
-    border-color: #009981;
-}
-
-.input-group-text {
-    background-color: transparent;
-    border-color: #ced4da;
-}
-
-.input-group-text i {
-    color: #6c757d;
-}
-
-.form-control {
-    border-left: none;
-    padding-left: 0.75rem;
-}
-
-.form-control:not(.is-invalid):focus {
-    border-color: #009981;
-    box-shadow: 0 0 0 0.25rem rgba(0, 153, 129, 0.25);
-}
-
-.btn-outline-secondary {
-    border-color: #ced4da;
-}
-
-.btn-outline-secondary:hover {
-    background-color: #f8f9fa;
-    border-color: #009981;
-    color: #009981;
-}
-
-.btn-outline-secondary:focus {
-    box-shadow: 0 0 0 0.25rem rgba(0, 153, 129, 0.25);
-}
-
-.card {
-    border-radius: 1.5rem !important;
-}
-
-.rounded-start-4 {
-    border-top-left-radius: 1.5rem !important;
-    border-bottom-left-radius: 1.5rem !important;
-}
-
-.rounded-end-4 {
-    border-top-right-radius: 1.5rem !important;
-    border-bottom-right-radius: 1.5rem !important;
+@media (max-width: 768px) {
+    .login-container {
+        grid-template-columns: 1fr;
+    }
+    .promo-section {
+        display: none; 
+    }
+    .login-section {
+        border-left: none;
+    }
 }
 </style>

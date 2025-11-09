@@ -29,8 +29,8 @@
 
                 <form action="#" method="POST" class="login-form" @submit.prevent>
                     <div class="form-group">
-                        <label for="phone">Số điện thoại</label>
-                        <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại của bạn" required>
+                        <label for="phone">Email hoặc số điện thoại</label>
+                        <input type="text" id="phone" name="phone" placeholder="Nhập Email hoặc số điện thoại" required>
                     </div>
 
                     <div class="form-group">
@@ -56,7 +56,8 @@
                         Google
                     </button>
                     <button class="social-btn">
-                        <img src="https://static.vecteezy.com/system/resources/previews/021/460/448/non_2x/facebook-logo-free-png.png" alt="Facebook" width="500px">
+                        <img src="../../assets/facebook-svgrepo-com.svg"
+                            width="500px">
                         Facebook
                     </button>
                 </div>
