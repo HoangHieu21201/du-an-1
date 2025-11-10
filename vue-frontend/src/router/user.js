@@ -59,8 +59,8 @@ const users = [
         component: () => import("../page/user/CustomerOrders.vue"),
       },
       {
-        path: "/wishlish",
-        name: "wishlish",
+        path: "/wishlist",
+        name: "wishlist",
         component: () => import("../page/user/wishlist.vue"),
       },
     ],
