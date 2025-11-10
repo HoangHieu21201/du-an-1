@@ -16,9 +16,15 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/admin/adminUsers" class="nav-link">
+            <router-link to="/admin/adminAccount" class="nav-link">
+              <i class="nav-icon fa-solid fa-user-tie"></i>
+              <p> Tài khoản nội bộ</p>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/admin/userAccount" class="nav-link">
               <i class="nav-icon fas fa-user"></i>
-              <p> Quản lý tài khoản</p>
+              <p> Tài khoản khách hàng</p>
             </router-link>
           </li>
           <li class="nav-item">
@@ -70,7 +76,7 @@
 </template>
 <style scoped>
 .nav-item p{
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
   margin: 8px 0;
 }

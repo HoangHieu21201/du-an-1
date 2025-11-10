@@ -6,12 +6,12 @@ const users = [
       {
         path: "",
         name: "home",
-        component: () => import("../page/user/home.vue"),
+        component: () => import("../page/user/Home.vue"),
       },
       {
         path: "about",
         name: "about",
-        component: () => import("../page/user/about.vue"),
+        component: () => import("../page/user/About.vue"),
       },
       {
         path: "contact",
@@ -21,27 +21,27 @@ const users = [
       {
         path: "notFound",
         name: "notFound",
-        component: () => import("../page/user/notFound.vue"),
+        component: () => import("../page/user/NotFound.vue"),
       },
       {
         path: "profile",
         name: "profile",
-        component: () => import("../page/user/profile.vue"),
+        component: () => import("../page/user/Profile.vue"),
       },
       {
         path: "register",
         name: "register",
-        component: () => import("../page/user/register.vue"),
+        component: () => import("../page/user/Register.vue"),
       },
       {
         path: "login",
         name: "login",
-        component: () => import("../page/user/login.vue"),
+        component: () => import("../page/user/Login.vue"),
       },
       {
         path: ":pathMatch(.*)*",
         name: "catchAll",
-        component: () => import("../page/user/notFound.vue"),
+        component: () => import("../page/user/NotFound.vue"),
       },
       {
         path: "cart",
@@ -59,9 +59,9 @@ const users = [
         component: () => import("../page/user/CustomerOrders.vue"),
       },
       {
-        path: "/wishlist",
-        name: "wishlist",
-        component: () => import("../page/user/wishlist.vue"),
+       path: "wishlist",
+       name: "wishlist",
+       component: () => import("../page/user/wishlist.vue"),
       },
     ],
   },

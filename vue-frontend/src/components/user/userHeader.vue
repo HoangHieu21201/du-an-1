@@ -59,7 +59,7 @@
         </form>
 
         <div class="header-actions">
-          <router-link :to="{name: 'cart'}" class="action-item">
+          <router-link :to="{name: 'cart'}" class="action-item side-menu-container">
             <i class="fa-solid fa-cart-shopping"></i>
             <span>Giỏ hàng</span>
           </router-link>
@@ -132,7 +132,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css');
 
 :root {
   --primary-color: #009981;
@@ -364,5 +363,6 @@ ul {
 .login-btn:hover {
   background-color: var(--primary-dark);
   opacity: 1;
+  color: white !important;
 }
 </style>
