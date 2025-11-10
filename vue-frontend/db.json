@@ -5,6 +5,7 @@
       "email": "minhdzwama211@gmail.com",
       "role": "admin",
       "status": "active",
+      "password": "Binhminh@123",
       "id": "3399"
     },
     {
@@ -12,23 +13,38 @@
       "username": "binhminh0211",
       "email": "minhdzwama211@gmail.com",
       "password": "Binhminh@123",
-      "password_confirmation": "Binhminh@123",
-      "role": "nhanvien"
+      "role": "nhanvien",
+      "status": "active"
     },
     {
       "id": "c4d1",
       "username": "binhminh0211",
       "email": "binhminh211@gmail.com",
       "password": "Binhminh@123",
-      "password_confirmation": "Binhminh@123",
-      "role": "nhanvien"
+      "role": "nhanvien",
+      "status": "active"
     },
     {
       "id": "c289",
       "username": "tantuanhi47k1",
       "email": "ttuann47@gmail.com",
       "password": "123456789",
-      "password_confirmation": "123456789",
+      "role": "nhanvien"
+    },
+    {
+      "id": "71e5",
+      "username": "hieuht123",
+      "email": "hieuhtpk04060@gmail.com",
+      "password": "123123123",
+      "password_confirmation": "123123123",
+      "role": "nhanvien"
+    },
+    {
+      "id": "1a8b",
+      "username": "hieuht02",
+      "email": "hieuhtpk04060@gmail.com",
+      "password": "123123123",
+      "password_confirmation": "123123123",
       "role": "nhanvien"
     }
   ],
@@ -47,7 +63,9 @@
       "email": "minhntbpk04039@gmail.com",
       "phone": "0358090730",
       "password": "Binhminh@123",
-      "password_confirmation": "Binhminh@123"
+      "password_confirmation": "Binhminh@123",
+      "address": "123 Đường ABC, Quận 1, TP. HCM",
+      "avatar": "https://placehold.co/100x100"
     },
     {
       "id": "ea65",
@@ -56,6 +74,15 @@
       "phone": "0358090730",
       "password": "Binhminh@123",
       "password_confirmation": "Binhminh@123"
+    },
+    {
+      "id": "8323",
+      "name": "hieuht",
+      "email": "hieuhtpk04060@gmail.com",
+      "phone": "0377975276",
+      "password": "123123123",
+      "password_confirmation": "123123123",
+      "status": "active"
     }
   ],
   "roles": [
@@ -93,14 +120,6 @@
       "icon": "<i class=\"bi bi-laptop\"></i>",
       "order": 4,
       "id": "4",
-      "status": "active"
-    },
-    {
-      "name": "Audio",
-      "description": "Âm thanh và tai nghe",
-      "icon": "<i class=\"fa-solid fa-headphones\"></i>",
-      "order": 5,
-      "id": "6",
       "status": "active"
     },
     {
@@ -624,37 +643,100 @@
   ],
   "orders": [
     {
-      "id": "2",
-      "customerName": "Trần Thị B",
-      "customerPhone": "0987654321",
-      "customerAddress": "456 Đường XYZ, Q3, TP. HCM",
-      "totalAmount": 1200000,
-      "status": "Đã hoàn thành",
-      "createdAt": "2023-10-28T14:30:00Z",
+      "id": "ORDER-001",
+      "customerName": "Nguyễn Văn A",
+      "customerPhone": "0901234567",
+      "customerAddress": "123 Lê Lợi, Quận 1, TP.HCM",
+      "totalAmount": 1500000,
+      "status": "returned",
+      "createdAt": "2025-11-10T09:00:00Z",
       "return_status": ""
     },
     {
-      "id": "3",
-      "customerName": "Trần Thị C",
+      "id": "ORDER-002",
+      "customerName": "Trần Thị B",
+      "customerPhone": "0909876543",
+      "customerAddress": "456 Nguyễn Huệ, Quận 1, TP.HCM",
+      "totalAmount": 2500000,
+      "status": "returned",
+      "createdAt": "2025-11-10T10:30:00Z",
+      "return_status": ""
+    },
+    {
+      "id": "ORDER-003",
+      "customerName": "Lê Văn C",
       "customerPhone": "0912345678",
-      "customerAddress": "123 Đường ABC, Q1, TP. HCM",
-      "totalAmount": 500000,
-      "status": "Hoàn hàng thành công",
-      "createdAt": "2023-10-28T14:30:00Z",
+      "customerAddress": "789 Điện Biên Phủ, Quận 3, TP.HCM",
+      "totalAmount": 850000,
+      "status": "shipping",
+      "createdAt": "2025-11-10T14:15:00Z",
       "return_status": ""
     },
     {
-      "id": "4",
-      "customerName": "Trần Thị B",
-      "customerPhone": "0987654321",
-      "customerAddress": "456 Đường XYZ, Q3, TP. HCM",
+      "id": "ORDER-004",
+      "customerName": "Phạm Thị D",
+      "customerPhone": "0987123456",
+      "customerAddress": "321 Hai Bà Trưng, Quận 3, TP.HCM",
+      "totalAmount": 3200000,
+      "status": "returning",
+      "createdAt": "2025-11-10T16:45:00Z",
+      "return_status": ""
+    },
+    {
+      "id": "ORDER-005",
+      "customerName": "Hoàng Văn E",
+      "customerPhone": "0933456789",
+      "customerAddress": "654 Cách Mạng Tháng 8, Quận 10, TP.HCM",
       "totalAmount": 1200000,
-      "status": "Hoàn hàng thành công",
-      "createdAt": "2023-10-28T14:30:00Z",
+      "status": "pending",
+      "createdAt": "2025-11-11T08:00:00Z",
       "return_status": ""
     }
   ],
-  "order_items": [],
+  "order_items": [
+    {
+      "id": "ITEM-001",
+      "orderId": "ORDER-001",
+      "productId": 101,
+      "quantity": 2,
+      "price": 750000
+    },
+    {
+      "id": "ITEM-002",
+      "orderId": "ORDER-002",
+      "productId": 102,
+      "quantity": 1,
+      "price": 2500000
+    },
+    {
+      "id": "ITEM-003",
+      "orderId": "ORDER-003",
+      "productId": 103,
+      "quantity": 1,
+      "price": 850000
+    },
+    {
+      "id": "ITEM-004",
+      "orderId": "ORDER-004",
+      "productId": 101,
+      "quantity": 2,
+      "price": 750000
+    },
+    {
+      "id": "ITEM-005",
+      "orderId": "ORDER-004",
+      "productId": 104,
+      "quantity": 1,
+      "price": 1700000
+    },
+    {
+      "id": "ITEM-006",
+      "orderId": "ORDER-005",
+      "productId": 105,
+      "quantity": 3,
+      "price": 400000
+    }
+  ],
   "comments": [
     {
       "id": "1",

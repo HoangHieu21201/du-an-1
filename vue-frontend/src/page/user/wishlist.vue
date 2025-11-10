@@ -1,5 +1,4 @@
 <script setup>
-// Không cần logic, chỉ giao diện
 </script>
 
 <template>
