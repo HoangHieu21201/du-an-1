@@ -29,9 +29,10 @@ async function fetchDashboardData() {
     const [orderRes, productRes, customerRes, reviewRes] = await Promise.all([ // Thêm reviewRes
       axios.get(`${API_URL}/orders?_sort=id&_order=desc`),
       axios.get(`${API_URL}/products`),
-      axios.get(`${API_URL}/account_user?_sort=id&_order=desc`),
+      // THAY ĐỔI: Gọi đến /users?role=user thay vì /account_user
+      axios.get(`${API_URL}/users?role=user&_sort=id&_order=desc`),
       // Lấy 5 đánh giá mới nhất, expand product và user
-      axios.get(`${API_URL}/reviews?_sort=id&_order=desc&_limit=5&_expand=product&_expand=user`) 
+      axios.get(`${API_URL}/reviews?_sort=id&_order=desc&_limit=5&_expand=product&_expand=user`)
     ]);
 
     orders.value = orderRes.data;
@@ -155,7 +156,7 @@ const orderStatusChart = computed(() => {
 
   const labels = Object.keys(statusCounts).map(key => statusLabels[key]);
   const series = Object.values(statusCounts);
-  
+
   // Lọc ra các series > 0 và label tương ứng
   const activeLabels = [];
   const activeSeries = [];
@@ -172,7 +173,7 @@ const orderStatusChart = computed(() => {
       chart: { type: 'donut' },
       labels: activeLabels,
       colors: ['#ffc107', '#0dcaf0', '#0d6efd', '#198754', '#dc3545', '#6c757d', '#212529'],
-      dataLabels: { 
+      dataLabels: {
         enabled: true,
         formatter: (val, opts) => opts.w.globals.labels[opts.seriesIndex]
       },
@@ -193,6 +194,9 @@ const orderStatusChart = computed(() => {
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-end">
               <li class="breadcrumb-item"><router-link to="/admin">Trang Chủ</router-link></li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Admin ThinkHub
+              </li>
             </ol>
           </div>
         </div>

@@ -177,7 +177,8 @@ const fetchData = async () => {
             axios.get(`${API_URL}/categories?_sort=order&_order=asc&status=active`),
             axios.get(`${API_URL}/slides`),
             axios.get(`${API_URL}/products`),
-            axios.get(`${API_URL}/account_admin`),
+            // SỬA ĐỔI: Thay đổi endpoint từ 'account_admin' thành 'users?role_ne=user'
+            axios.get(`${API_URL}/users?role_ne=user`),
             axios.get(`${API_URL}/news`),
             axios.get(`${API_URL}/roles`)
         ]);
