@@ -91,12 +91,11 @@ const handleRegister = async () => {
         username: formData.username,
         email: formData.email,
         password: formData.password,
-        password_confirmation: formData.confirmPassword,
         role: formData.role,
     };
 
     try {
-        const res = await axios.post(`${API_URL}/account_admin`, payload);
+        const res = await axios.post(`${API_URL}/users`, payload);
         if (res.status === 201 || res.status === 200) {
             Swal.fire({
                 icon: 'success',
