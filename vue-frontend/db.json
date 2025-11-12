@@ -209,7 +209,7 @@
     {
       "id": "102",
       "image_url": "https://placehold.co/300x300/e0ffff/000?text=Phone+X2",
-      "name": "iPhone 17 Pro Max 512GB",
+      "name": "iPhone 17",
       "category": {
         "id": "3",
         "name": "Phone"
@@ -853,6 +853,13 @@
       "id": "3",
       "title": "Samsung công bố Galaxy Z Fold7",
       "excerpt": "Siêu phẩm gập với độ bền cao hơn 30%, pin dùng 2 ngày.",
+      "image": "https://placehold.co/400x200?text=Fold+7",
+      "date": "2025-09-30"
+    },
+    {
+      "id": "4",
+      "title": "Samsung Hàng mối ra mắt 2025 ",
+      "excerpt": "Hàng mối ra mắt 2025",
       "image": "https://placehold.co/400x200?text=Fold+7",
       "date": "2025-09-30"
     }

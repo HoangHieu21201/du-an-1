@@ -80,9 +80,20 @@ const users = [
        component: () => import("../page/user/wishlist.vue"),
       },
       {
+<<<<<<< Updated upstream
        path: "OrderList",
        name: "OrderList",
        component: () => import("../page/user/OrderList.vue"),
+=======
+       path: '/products/:id',
+       name: "ProductDetail",
+       component: () => import("../page/user/productdetail.vue"),
+      },
+      {
+       path: "trangcuahang",
+       name: "trangcuahang",
+       component: () => import("../page/user/trangcuahang.vue"),
+>>>>>>> Stashed changes
       },
     ],
   },
