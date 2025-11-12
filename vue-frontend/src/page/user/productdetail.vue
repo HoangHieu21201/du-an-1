@@ -4,24 +4,22 @@
 
       <div class="col-lg-5">
         <div class="main-image-wrapper mb-3">
-          <img
-            :src="selectedImage"
-            :alt="product.name"
-            class="img-fluid rounded main-product-image"
-          />
+          <img :src="selectedImage" :alt="product.name" class="img-fluid rounded main-product-image" />
         </div>
 
         <div class="thumbnail-gallery" v-if="product.gallery_images && product.gallery_images.length > 1">
-          <img
-            v-for="(image, index) in product.gallery_images"
-            :key="index"
-            :src="image"
-            :alt="`Thumbnail ${index + 1}`"
-            class="thumbnail-item"
-            :class="{ active: selectedImage === image }"
-            @click="selectImage(image)"
-          />
+          <img v-for="(image, index) in product.gallery_images" :key="index" :src="image"
+            :alt="`Thumbnail ${index + 1}`" class="thumbnail-item" :class="{ active: selectedImage === image }"
+            @click="selectImage(image)" />
         </div>
+
+        <section class="mt-4 mb-5 product-description">
+          <h4 class="section-title">📄 Mô tả sản phẩm</h4>
+          <p>
+            {{ product.description || "Sản phẩm chất lượng cao, bảo hành chính hãng 12 tháng." }}
+          </p>
+        </section>
+
       </div>
 
       <div class="col-lg-7">
@@ -44,10 +42,8 @@
             <span class="fs-2 fw-bold text-danger me-2">
               {{ formatCurrency(activeVariant.price) }}
             </span>
-            <span
-              v-if="activeVariant.original_price > activeVariant.price"
-              class="text-muted text-decoration-line-through fs-5"
-            >
+            <span v-if="activeVariant.original_price > activeVariant.price"
+              class="text-muted text-decoration-line-through fs-5">
               {{ formatCurrency(activeVariant.original_price) }}
             </span>
           </div>
@@ -55,13 +51,8 @@
           <div class="variant-section mb-4">
             <h5 class="fw-semibold fs-6">Chọn phiên bản:</h5>
             <div class="variant-options">
-              <button
-                v-for="(variant, index) in product.variants"
-                :key="variant.id || index"
-                class="btn variant-btn"
-                :class="{ active: selectedVariantIndex === index }"
-                @click="selectVariant(index)"
-              >
+              <button v-for="(variant, index) in product.variants" :key="variant.id || index" class="btn variant-btn"
+                :class="{ active: selectedVariantIndex === index }" @click="selectVariant(index)">
                 {{ variant.name || `Phiên bản ${index + 1}` }}
                 <span class="variant-price">{{ formatCurrency(variant.price) }}</span>
               </button>
@@ -73,15 +64,8 @@
             <button class="btn btn-outline-secondary btn-qty" @click="decreaseQty">
               <i class="bi bi-dash"></i>
             </button>
-            <input
-              type="number"
-              v-model.number="quantity"
-              min="1"
-              :max="activeVariant.stock"
-              class="form-control text-center"
-              style="width: 70px; margin: 0 5px;"
-              @change="validateQty"
-            />
+            <input type="number" v-model.number="quantity" min="1" :max="activeVariant.stock"
+              class="form-control text-center" style="width: 70px; margin: 0 5px;" @change="validateQty" />
             <button class="btn btn-outline-secondary btn-qty" @click="increaseQty">
               <i class="bi bi-plus"></i>
             </button>
@@ -95,9 +79,7 @@
               <i class="bi bi-cart-plus"></i> Thêm vào giỏ
             </button>
             <button class="btn btn-outline-danger btn-lg" @click="toggleFavorite(product)">
-              <i
-                :class="['bi', product.isFavorite ? 'bi-heart-fill' : 'bi-heart']"
-              ></i>
+              <i :class="['bi', product.isFavorite ? 'bi-heart-fill' : 'bi-heart']"></i>
             </button>
           </div>
 
@@ -110,16 +92,8 @@
           </h5>
 
           <div class="offers-list">
-            <div
-              v-for="offer in paymentOffers"
-              :key="offer.id"
-              class="offer-item d-flex align-items-start"
-            >
-              <img
-                :src="offer.logo_url"
-                :alt="offer.partner"
-                class="offer-logo me-3"
-              />
+            <div v-for="offer in paymentOffers" :key="offer.id" class="offer-item d-flex align-items-start">
+              <img :src="offer.logo_url" :alt="offer.partner" class="offer-logo me-3" />
               <div class="offer-text" v-html="offer.description"></div>
             </div>
 
@@ -129,21 +103,22 @@
           </div>
         </div>
 
-        
+
         <div class="promotion-section-box mb-4">
-            <h2><i class="fas fa-gift"></i> Khuyến mãi hấp dẫn</h2>
+          <h2><i class="fas fa-gift"></i> Khuyến mãi hấp dẫn</h2>
 
           <div class="promotion-list">
 
             <div class="promo-item">
               <span class="promo-badge-num">1</span>
               <div class="promo-text">
-                Giảm thêm 10% cho Pin dự phòng - Camera giám sát - Đồng hồ trẻ em - Gia dụng - Sức khỏe Làm đẹp khi mua Điện thoại/Laptop.
+                Giảm thêm 10% cho Pin dự phòng - Camera giám sát - Đồng hồ trẻ em - Gia dụng - Sức khỏe Làm đẹp khi mua
+                Điện thoại/Laptop.
                 <a href="#" class="promo-link" @click.prevent="viewAllOffers">Xem chi tiết</a>
               </div>
             </div>
 
-    <div class="promo-item">
+            <div class="promo-item">
               <span class="promo-badge-num">2</span>
               <div class="promo-text">
                 Nhận thêm 1 trong các khuyến mãi sau:
@@ -157,55 +132,50 @@
               </div>
               <span class="promo-badge-text">Khuyến mãi 1</span>
             </div>
- <a href="#" class="view-all">Xem tất cả <i class="fas fa-chevron-right"></i></a>
+            <a href="#" class="view-all">Xem tất cả <i class="fas fa-chevron-right"></i></a>
 
+            <section class="bundle-deal-section">
+              <div class="bundle-header">
+                <h2><i class="fas fa-bolt"></i> Mua kèm giá sốc</h2>
+              </div>
 
-
-
-
-
-<!-- === MUA KÈM GIÁ SỐC === -->
-<section class="bundle-deal-section">
-  <div class="bundle-header">
-    <h2><i class="fas fa-bolt"></i> Mua kèm giá sốc</h2>
-  </div>
-
-  <div class="bundle-products">
-    <div v-for="product in bundleDeals" :key="product.id" class="bundle-item">
-      <img :src="product.image" :alt="product.name" />
-      <h3>{{ product.name }}</h3>
-      <div class="price">
-        <span class="new-price">{{ product.newPrice.toLocaleString() }}₫</span>
-        <span class="old-price">{{ product.oldPrice.toLocaleString() }}₫</span>
-      </div>
-      <button class="btn-buy-now">Mua ngay</button>
-    </div>
-  </div>
-  <div class="service-package">
-  <h3>🎯 Chọn gói dịch vụ bảo hành</h3>
-  <div class="package-options">
-    <div
-      class="package-card"
-      v-for="(pkg, index) in warrantyPackages"
-      :key="index"
-      :class="{ active: selectedPackage === pkg }"
-      @click="selectedPackage = pkg"
-    >
-      <h4>{{ pkg.name }}</h4>
-      <p>{{ pkg.desc }}</p>
-      <span class="price">+{{ pkg.price.toLocaleString() }}₫</span>
-    </div>
-  </div>
-</div>
-</section>
-
-
-
-
-
-        
+              <div class="bundle-products">
+                <div v-for="product in bundleDeals" :key="product.id" class="bundle-item">
+                  <img :src="product.image" :alt="product.name" />
+                  <h3>{{ product.name }}</h3>
+                  <div class="price">
+                    <span class="new-price">{{ product.newPrice.toLocaleString() }}₫</span>
+                    <span class="old-price">{{ product.oldPrice.toLocaleString() }}₫</span>
+                  </div>
+                  <button class="btn-buy-now">Mua ngay</button>
+                </div>
+              </div>
+              <!-- <div class="service-package">
+                <h3>🎯 Chọn gói dịch vụ bảo hành</h3>
+                <div class="package-options">
+                  <div class="package-card" v-for="(pkg, index) in warrantyPackages" :key="index"
+                    :class="{ active: selectedPackage === pkg }" @click="selectedPackage = pkg">
+                    <h4>{{ pkg.name }}</h4>
+                    <p>{{ pkg.desc }}</p>
+                    <span class="price">+{{ pkg.price.toLocaleString() }}₫</span>
+                  </div>
+                </div>
+              </div> -->
+            </section>
           </div>
         </div>
+
+        <!-- ===== PHẦN MÔ TẢ SẢN PHẨM ĐÃ BỊ XÓA TẠI ĐÂY ===== -->
+        <!-- 
+        <section class="mt-4 mb-5 product-description">
+          <h4 class="section-title">📄 Mô tả sản phẩm</h4>
+          <p>
+            {{ product.description || "Sản phẩm chất lượng cao, bảo hành chính hãng 12 tháng." }}
+          </p>
+        </section>
+        -->
+        <!-- ==================================================== -->
+
       </div>
 
     </div>
@@ -243,23 +213,13 @@
               <button class="upload-btn">
                 <i class="bi bi-arrow-up"></i>
               </button>
-              <input
-                type="text"
-                class="search-input"
-                placeholder="Tìm sản phẩm ..."
-                v-model="tradeInSearchTerm"
-                @focus="tradeInResultsVisible = true"
-                @blur="setTimeout(() => tradeInResultsVisible = false, 200)"
-              />
+              <input type="text" class="search-input" placeholder="Tìm sản phẩm ..." v-model="tradeInSearchTerm"
+                @focus="tradeInResultsVisible = true" @blur="setTimeout(() => tradeInResultsVisible = false, 200)" />
             </div>
 
             <div class="trade-in-results" v-if="tradeInResultsVisible && tradeInSearchResults.length > 0">
               <ul>
-                <li
-                  v-for="item in tradeInSearchResults"
-                  :key="item.id"
-                  @click="navigateToProduct(item.id)"
-                >
+                <li v-for="item in tradeInSearchResults" :key="item.id" @click="navigateToProduct(item.id)">
                   <img :src="item.image_url" :alt="item.name" class="result-img">
                   <span class="result-name">{{ item.name }}</span>
                 </li>
@@ -271,36 +231,31 @@
         <section class="related-products-section mb-5" v-if="relatedProducts.length > 0">
           <h4 class="section-title">Sản phẩm liên quan</h4>
           <div class="horizontal-scroll-container">
-            <div
-              v-for="relatedProduct in relatedProducts"
-              :key="relatedProduct.id"
-              class="product-card-simple"
-              @click="navigateToProduct(relatedProduct.id)"
-            >
-              <img :src="relatedProduct.image_url" :alt="relatedProduct.name" class="card-img"/>
+            <div v-for="relatedProduct in relatedProducts" :key="relatedProduct.id" class="product-card-simple"
+              @click="navigateToProduct(relatedProduct.id)">
+              <img :src="relatedProduct.image_url" :alt="relatedProduct.name" class="card-img" />
               <h5 class="card-name">{{ relatedProduct.name }}</h5>
               <p class="card-price">{{ formatCurrency(getMinPrice(relatedProduct.variants)) }}</p>
             </div>
           </div>
         </section>
 
+        <!-- ===== PHẦN MÔ TẢ ĐÃ ĐƯỢC XÓA TẠI ĐÂY ===== -->
+        <!-- 
         <section class="mb-5 product-description">
           <h4 class="section-title">📄 Mô tả sản phẩm</h4>
           <p>
             {{ product.description || "Sản phẩm chất lượng cao, bảo hành chính hãng 12 tháng." }}
           </p>
         </section>
+        -->
 
         <section class="product-reviews">
           <h4 class="section-title">
             💬 Đánh giá ({{ reviews.length }})
           </h4>
           <div v-if="reviews.length">
-            <div
-              v-for="review in reviews"
-              :key="review.id"
-              class="review-item"
-            >
+            <div v-for="review in reviews" :key="review.id" class="review-item">
               <div class="d-flex align-items-center mb-1">
                 <i class="bi bi-person-circle me-2 fs-5"></i>
                 <strong>Người dùng #{{ review.userId }}</strong>
@@ -336,6 +291,15 @@ const product = ref(null);
 const reviews = ref([]);
 const quantity = ref(1);
 const loading = ref(true);
+
+// 🔹 DỮ LIỆU MUA KÈM (GIẢ)
+const bundleDeals = ref([
+  { id: 101, name: "Sạc dự phòng 10000mAh", image: "https://placehold.co/150x150/f0f0f0/333?text=Sac+Du+Phong", newPrice: 350000, oldPrice: 500000 },
+  { id: 102, name: "Tai nghe True Wireless", image: "https://placehold.co/150x150/f0f0f0/333?text=Tai+Nghe", newPrice: 590000, oldPrice: 890000 },
+  { id: 103, name: "Củ sạc nhanh 30W", image: "https://placehold.co/150x150/f0f0f0/333?text=Cu+Sac", newPrice: 250000, oldPrice: 400000 },
+  { id: 104, name: "Cáp sạc C to L", image: "https://placehold.co/150x150/f0f0f0/333?text=Cap+Sac", newPrice: 190000, oldPrice: 300000 },
+]);
+
 
 // 🔹 GỘP THÀNH MỘT BIẾN paymentOffers DUY NHẤT
 const paymentOffers = ref([
@@ -540,7 +504,8 @@ watchEffect(() => {
   --primary-color: rgb(0, 153, 129);
   --primary-hover: rgb(0, 117, 99);
   --primary-light: rgba(0, 153, 129, 0.1);
-  --trade-in-red: #d70018; /* Màu đỏ cho mục thu cũ */
+  --trade-in-red: #d70018;
+  /* Màu đỏ cho mục thu cũ */
 }
 
 .product-detail-page {
@@ -555,7 +520,7 @@ watchEffect(() => {
   padding: 25px;
   border-radius: 8px;
   border: 1px solid #eee;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .product-title {
@@ -574,12 +539,14 @@ watchEffect(() => {
   border-radius: 8px;
   overflow: hidden;
 }
+
 .main-product-image {
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: contain;
   transition: transform 0.3s ease;
 }
+
 .main-product-image:hover {
   transform: scale(1.05);
 }
@@ -589,6 +556,7 @@ watchEffect(() => {
   gap: 10px;
   flex-wrap: wrap;
 }
+
 .thumbnail-item {
   width: 70px;
   height: 70px;
@@ -599,10 +567,12 @@ watchEffect(() => {
   opacity: 0.7;
   transition: all 0.2s ease;
 }
+
 .thumbnail-item:hover {
   opacity: 1;
   border-color: #aaa;
 }
+
 .thumbnail-item.active {
   opacity: 1;
   border-color: var(--primary-color);
@@ -615,25 +585,30 @@ watchEffect(() => {
   flex-wrap: wrap;
   gap: 10px;
 }
+
 .variant-btn {
   border: 2px solid #ddd;
   background-color: #fff;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  padding: 0px 25px;
+  padding: 5px 15px;
+  /* Giảm padding */
   text-align: left;
   font-weight: 500;
   transition: all 0.2s ease;
 }
+
 .variant-btn:hover {
   border-color: #aaa;
 }
+
 .variant-btn.active {
   border-color: var(--primary-color);
   background-color: var(--primary-light);
   box-shadow: 0 0 0 2px var(--primary-color);
 }
+
 .variant-price {
   font-size: 0.85em;
   font-weight: bold;
@@ -657,21 +632,23 @@ watchEffect(() => {
   padding: 10px 20px;
   transition: all 0.3s ease;
 }
+
 .btn-primary-green:hover {
-  background-color: #67a5a7; /* Màu xanh đậm hơn */
-  border-radius: 12px; /* Bo góc mềm mại */
-  box-shadow: 0 0 12px rgba(103, 165, 167, 0.7); /* Hiệu ứng sáng mờ */
-  transition: all 0.3s ease; /* Hiệu ứng chuyển mượt mà */
-  transform: scale(1.05);
+  background-color: var(--primary-hover);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 153, 129, 0.4);
+  transform: translateY(-2px);
 }
 
 /* MÔ TẢ & ĐÁNH GIÁ */
-.product-description, .product-reviews {
+.product-description,
+.product-reviews {
   background-color: #fff;
   padding: 25px;
   border-radius: 8px;
   border: 1px solid #eee;
 }
+
 .section-title {
   border-bottom: 2px solid var(--primary-color);
   padding-bottom: 10px;
@@ -679,10 +656,12 @@ watchEffect(() => {
   font-weight: 600;
   color: var(--primary-color);
 }
+
 .review-item {
   border-bottom: 1px solid #f0f0f0;
   padding: 15px 0;
 }
+
 .review-item:last-child {
   border-bottom: none;
 }
@@ -695,15 +674,18 @@ watchEffect(() => {
   padding: 25px 30px;
   text-align: center;
 }
+
 .trade-in-section h3 {
   font-size: 1.75rem;
   font-weight: 700;
 }
+
 .trade-in-section .subtitle {
   color: #ccc;
   font-size: 0.95rem;
   margin-bottom: 25px;
 }
+
 .trade-in-features {
   display: flex;
   justify-content: space-around;
@@ -711,11 +693,13 @@ watchEffect(() => {
   gap: 15px;
   margin-bottom: 25px;
 }
+
 .feature-item {
   flex: 1;
   font-size: 0.9rem;
   line-height: 1.4;
 }
+
 .feature-item .icon-wrapper {
   background-color: var(--trade-in-red);
   width: 50px;
@@ -741,6 +725,7 @@ watchEffect(() => {
   display: flex;
   align-items: center;
 }
+
 .trade-in-searchbar .upload-btn {
   background-color: var(--trade-in-red);
   border: none;
@@ -752,6 +737,7 @@ watchEffect(() => {
   margin-right: 10px;
   flex-shrink: 0;
 }
+
 .trade-in-searchbar .search-input {
   flex: 1;
   background-color: #fff;
@@ -763,6 +749,7 @@ watchEffect(() => {
   font-size: 0.9rem;
   outline: none;
 }
+
 .trade-in-searchbar .search-input::placeholder {
   color: #777;
 }
@@ -775,16 +762,18 @@ watchEffect(() => {
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   z-index: 10;
   max-height: 300px;
   overflow-y: auto;
 }
+
 .trade-in-results ul {
   list-style: none;
   padding: 5px;
   margin: 0;
 }
+
 .trade-in-results li {
   display: flex;
   align-items: center;
@@ -793,9 +782,11 @@ watchEffect(() => {
   border-radius: 6px;
   color: #333;
 }
+
 .trade-in-results li:hover {
   background-color: #f4f4f4;
 }
+
 .trade-in-results .result-img {
   width: 40px;
   height: 40px;
@@ -803,6 +794,7 @@ watchEffect(() => {
   border-radius: 4px;
   margin-right: 10px;
 }
+
 .trade-in-results .result-name {
   font-size: 0.9rem;
   font-weight: 500;
@@ -815,12 +807,49 @@ watchEffect(() => {
   border-radius: 8px;
   border: 1px solid #eee;
 }
+
 .horizontal-scroll-container {
   display: flex;
   overflow-x: auto;
   gap: 16px;
   padding-bottom: 10px;
 }
+
+.product-card-simple {
+  flex: 0 0 180px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+.product-card-simple:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.product-card-simple .card-img {
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.product-card-simple .card-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  height: 2.5em;
+  overflow: hidden;
+}
+
+.product-card-simple .card-price {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
 
 /* ==== ƯU ĐÃI THANH TOÁN ==== */
 .payment-offers-section {
@@ -877,6 +906,7 @@ watchEffect(() => {
   align-items: center;
   gap: 5px;
   cursor: pointer;
+  color: var(--primary-color);
 }
 
 .btn-view-all:hover {
@@ -885,11 +915,20 @@ watchEffect(() => {
 
 /* ==== 🔽 ĐÂY LÀ CSS MỚI ĐƯỢC THÊM VÀO 🔽 ==== */
 .promotion-section-box {
-  background-color: #f3f9ff; /* Màu nền xanh nhạt */
-  border: 1px solid #d0e6ff; /* Viền xanh */
+  background-color: #f3f9ff;
+  /* Màu nền xanh nhạt */
+  border: 1px solid #d0e6ff;
+  /* Viền xanh */
   border-radius: 10px;
   padding: 20px 25px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+}
+
+.promotion-section-box h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0056b3;
+  margin-bottom: 15px;
 }
 
 .promotion-list {
@@ -908,7 +947,8 @@ watchEffect(() => {
   flex-shrink: 0;
   width: 20px;
   height: 20px;
-  background-color: #007bff; /* Màu xanh dương cho số */
+  background-color: #007bff;
+  /* Màu xanh dương cho số */
   color: white;
   border-radius: 50%;
   display: flex;
@@ -916,7 +956,8 @@ watchEffect(() => {
   justify-content: center;
   font-size: 0.8rem;
   font-weight: bold;
-  margin-top: 3px; /* Căn chỉnh cho thẳng hàng */
+  margin-top: 3px;
+  /* Căn chỉnh cho thẳng hàng */
 }
 
 .promo-text {
@@ -933,6 +974,7 @@ watchEffect(() => {
   color: var(--primary-color);
   margin-left: 5px;
 }
+
 .promo-link:hover {
   text-decoration: underline;
 }
@@ -941,13 +983,16 @@ watchEffect(() => {
   display: flex;
   align-items: flex-start;
   gap: 5px;
-  margin-left: 30px; /* Thụt vào so với mục 2 */
-  position: relative; /* Dùng để định vị nhãn */
+  margin-left: 30px;
+  /* Thụt vào so với mục 2 */
+  position: relative;
+  /* Dùng để định vị nhãn */
 }
 
 .promo-item-sub .bi-dot {
   line-height: 1.2;
-  margin-top: -3px; /* Kéo dấu chấm lên */
+  margin-top: -3px;
+  /* Kéo dấu chấm lên */
   color: var(--primary-color);
 }
 
@@ -962,126 +1007,181 @@ watchEffect(() => {
   padding: 2px 6px;
   border-radius: 4px;
 }
-/* ====== PHẦN KHUYẾN MÃI HẤP DẪN ====== */
-.promotions {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  padding: 20px;
-  margin-top: 25px;
-}
-.promotions h3 {
-  font-size: 1.2rem;
-  color: #e63946;
-  margin-bottom: 10px;
-}
-.promotions ul {
-  list-style: none;
-  padding: 0;
-}
-.promotions li {
-  background: #fff6f6;
-  border-left: 4px solid #e63946;
-  margin-bottom: 8px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 0.95rem;
+
+.view-all {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 10px;
+  margin-left: 30px;
 }
 
-/* ====== PHẦN MUA KÈM GIÁ SỐC ====== */
-.combo-deal {
-  background: linear-gradient(180deg, #fff 0%, #f9f9f9 100%);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  padding: 20px;
-  margin-top: 30px;
+.view-all:hover {
+  text-decoration: underline;
 }
-.combo-deal h3 {
-  font-size: 1.2rem;
-  color: #d62828;
+
+
+/* ====== PHẦN MUA KÈM GIÁ SỐC ====== */
+.bundle-deal-section {
+  background: #fff8f8;
+  border: 1px solid #ffe0e0;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.bundle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 15px;
 }
-.combo-products {
+
+.bundle-header h2 {
+  font-size: 1.25rem;
+  color: #d70018;
+  /* Màu đỏ */
+  font-weight: 700;
+}
+
+.bundle-products {
   display: flex;
   gap: 15px;
   overflow-x: auto;
-  padding-bottom: 5px;
+  padding-bottom: 15px;
 }
-.combo-card {
+
+.bundle-item {
   flex: 0 0 160px;
   background: #fff;
   border: 1px solid #eee;
-  border-radius: 10px;
-  text-align: center;
-  padding: 10px;
-  transition: all 0.3s ease;
-}
-.combo-card img {
-  width: 100%;
   border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  transition: all 0.2s ease;
 }
-.combo-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+
+.bundle-item:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
 }
-.combo-card .price {
-  color: #e63946;
-  font-weight: bold;
-  margin-top: 8px;
+
+.bundle-item img {
+  width: 100%;
+  height: 120px;
+  object-fit: contain;
+  border-radius: 6px;
+  margin-bottom: 8px;
 }
+
+.bundle-item h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  height: 2.5em;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.bundle-item .price {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.bundle-item .new-price {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #d70018;
+}
+
+.bundle-item .old-price {
+  font-size: 0.8rem;
+  color: #888;
+  text-decoration: line-through;
+}
+
+.btn-buy-now {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-buy-now:hover {
+  background: var(--primary-hover);
+}
+
 
 /* ====== GÓI BẢO HÀNH ====== */
 .service-package {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  background: #f3f9ff;
+  border: 1px solid #d0e6ff;
+  border-radius: 10px;
   padding: 20px;
-  margin-top: 30px;
+  margin-top: 20px;
 }
+
 .service-package h3 {
-  font-size: 1.2rem;
-  color: #1d3557;
+  font-size: 1.25rem;
+  color: #0056b3;
+  font-weight: 700;
   margin-bottom: 15px;
 }
+
 .package-options {
   display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
+  flex-direction: column;
+  gap: 10px;
 }
+
 .package-card {
-  flex: 1 1 calc(33.33% - 10px);
-  background: #f9f9f9;
-  border: 2px solid transparent;
+  background: #fff;
+  border: 2px solid #ddd;
   border-radius: 10px;
   padding: 15px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
+
 .package-card:hover {
-  border-color: #457b9d;
-  transform: translateY(-4px);
-  background: #f1f9ff;
+  border-color: var(--primary-color);
+  background: #f9fdfc;
 }
+
 .package-card.active {
-  border-color: #1d3557;
-  background: #e8f3ff;
-  box-shadow: 0 3px 8px rgba(29,53,87,0.2);
+  border-color: var(--primary-color);
+  background: var(--primary-light);
+  box-shadow: 0 0 0 2px var(--primary-color);
 }
+
 .package-card h4 {
   margin: 0;
-  color: #1d3557;
+  color: #222;
   font-size: 1rem;
+  font-weight: 600;
 }
+
 .package-card p {
-  margin: 6px 0;
+  margin: 5px 0 0;
   font-size: 0.9rem;
   color: #555;
 }
-.package-card .price {
-  color: #e63946;
-  font-weight: bold;
-  display: inline-block;
-  margin-top: 5px;
-}
 
+.package-card .price {
+  color: var(--primary-color);
+  font-weight: 700;
+  display: block;
+  margin-top: 5px;
+  font-size: 1rem;
+}
 </style>
