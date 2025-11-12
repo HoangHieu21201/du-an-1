@@ -812,6 +812,15 @@
       "createdAt": "2023-11-01T10:00:00Z",
       "productId": 1,
       "userId": 1
+    },
+    {
+      "id": "1",
+      "rating": 5,
+      "content": "Sản phẩm 5 sao, chất lượng tuyệt vời!",
+      "status": "approved",
+      "createdAt": "2023-11-01T10:00:00Z",
+      "productId": "101",
+      "userId": "1"
     }
   ],
   "slides": [
