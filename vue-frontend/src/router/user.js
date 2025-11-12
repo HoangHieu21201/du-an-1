@@ -64,7 +64,7 @@ const users = [
         name: "cart",
         component: () => import("../page/user/Cart.vue"),
       },
-      {
+      { 
         path: "checkout",
         name: "checkout",
         component: () => import("../page/user/Checkout.vue"),
@@ -80,9 +80,14 @@ const users = [
        component: () => import("../page/user/wishlist.vue"),
       },
       {
-       path: "OrderList",
-       name: "OrderList",
-       component: () => import("../page/user/OrderList.vue"),
+       path: '/products/:id',
+       name: "ProductDetail",
+       component: () => import("../page/user/productdetail.vue"),
+      },
+      {
+       path: "trangcuahang",
+       name: "trangcuahang",
+       component: () => import("../page/user/trangcuahang.vue"),
       },
     ],
   },

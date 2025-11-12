@@ -2,24 +2,27 @@
     <div id="app">
         <main class="container">
 
-            <!-- ===== TOP SECTION: CATEGORIES + SLIDER + UTILITY ===== -->
             <section class="top-section-layout">
-                <!-- Cột trái: DANH MỤC -->
                 <nav class="categories-sidebar">
                     <h3 class="sidebar-title">Danh mục</h3>
-                    <div class="category-item-sodo" v-for="category in categories" :key="category.id"
-                        :class="{ active: category.id === activeCategoryId }" @click="setActiveCategory(category.id)">
+                    <router-link 
+                        v-for="category in categories" 
+                        :key="category.id" 
+                        :to="{ path: '/trangcuahang', query: { categoryId: category.id } }"
+                        class="category-item-sodo" 
+                        :class="{ active: String(category.id) === String(activeCategoryId) }"
+                        @click="setActiveCategory(category.id)"
+                    >
                         <span v-html="category.icon" class="icon"></span>
                         <span>{{ category.name }}</span>
-                    </div>
-                </nav>
+                    </router-link>
+                    </nav>
 
-                <!-- Cột giữa: SLIDER -->
                 <section class="slider" @mouseenter="stopAutoSlide" @mouseleave="startAutoSlide">
                     <div class="slider-wrapper" :style="{ transform: 'translateX(-' + currentSlide * 100 + '%)' }">
                         <div class="slide" v-for="slide in slides" :key="slide.id"
                             :style="{ backgroundImage: 'url(' + slide.imageUrl + ')' }">
-                            <!-- (Optional: Slide content text if needed) -->
+                            <a :href="slide.link || '#'" style="display: block; width: 100%; height: 100%;" aria-label="Xem chi tiết"></a>
                         </div>
                     </div>
 
@@ -32,7 +35,6 @@
                     </div>
                 </section>
 
-                <!-- Cột phải: TIỆN ÍCH -->
                 <aside class="utility-sidebar">
                     <div class="user-info-card" v-if="users.length">
                         <p class="user-name">{{ users[0].username }}</p>
@@ -41,15 +43,13 @@
                 </aside>
             </section>
 
-            <!-- BRAND BANNER -->
             <section class="brand-banner" style="margin-top: 15px;">
-                <a href="#">
+                <router-link to="/khuyen-mai">
                     <img src="#" alt="Brand Banner"
                         style="width: 100%; height: 200px; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #aaa; font-style: italic;">
-                </a>
+                </router-link>
             </section>
-
-            <!-- TRUST BLOCK -->
+            
             <section class="trust-block">
                 <div class="trust-item"><span>✔️ Bảo hành chính hãng</span></div>
                 <div class="trust-item"><span>🚚 Giao hàng miễn phí</span></div>
@@ -57,12 +57,8 @@
                 <div class="trust-item"><span>🏪 Hơn 100+ cửa hàng</span></div>
             </section>
 
-            <!-- =========================================
-            KHU VỰC SẢN PHẨM (PRODUCT SECTIONS)
-      ========================================== -->
             <section class="product-section-container">
 
-                <!-- 1️⃣ SẢN PHẨM ĐƯỢC YÊU THÍCH NHẤT (HOT) -->
                 <section class="product-group hot-products">
                     <h2 class="section-title">❤️ Sản phẩm được yêu thích nhất</h2>
                     <div class="product-grid">
@@ -70,7 +66,6 @@
                             <img :src="product.image_url || '#'" :alt="product.name">
                             <h3 class="product-name">{{ product.name }}</h3>
 
-                            <!-- Thống kê nhỏ (Yêu thích & Đánh giá) -->
                             <div class="product-stats">
                                 <span class="rating">
                                     <i class="fas fa-star text-warning"></i> {{ product.average_rating || 0 }}
@@ -84,8 +79,10 @@
                                 <span class="new-price">{{ formatCurrency(getMinPrice(product.variants)) }}</span>
                             </div>
                             <div class="card-actions-small">
-                                <button class="btn-view" @click="openQuickView(product)"><i class="fas fa-eye"></i>
-                                    Xem</button>
+                             <button class="btn-view" @click="$router.push({ name: 'ProductDetail', params: { id: product.id } })">
+  <i class="fas fa-eye"></i> Xem
+</button>
+
                                 <button class="btn-add-cart" @click="addToCart(product)"><i class="fas fa-plus"></i>
                                     Thêm</button>
                             </div>
@@ -93,7 +90,6 @@
                     </div>
                 </section>
 
-                <!-- 2️⃣ VÒNG LẶP TỰ ĐỘNG CÁC DANH MỤC -->
                 <template v-for="category in categoriesWithProducts" :key="category.id">
                     <section class="product-group category-group" :id="'cat-' + category.id">
                         <h2 class="section-title">
@@ -119,8 +115,12 @@
                                     <span class="new-price">{{ formatCurrency(getMinPrice(product.variants)) }}</span>
                                 </div>
                                 <div class="card-actions-small">
-                                    <button class="btn-view" @click="openQuickView(product)"><i class="fas fa-eye"></i>
-                                        Xem</button>
+                                   <button
+  class="btn-view"
+  @click="$router.push({ name: 'ProductDetail', params: { id: product.id } })"
+>
+  <i class="fas fa-eye"></i> Xem
+</button>
                                     <button class="btn-add-cart" @click="addToCart(product)"><i class="fas fa-plus"></i>
                                         Thêm</button>
                                 </div>
@@ -129,7 +129,6 @@
                     </section>
                 </template>
 
-                <!-- 3️⃣ TIN TỨC CÔNG NGHỆ -->
                 <section class="product-group news-group" style="margin-top: 60px;">
                     <h2 class="section-title">📰 Tin tức công nghệ</h2>
                     <div class="news-grid">
@@ -139,22 +138,24 @@
                             <p class="news-excerpt">
                                 {{ (news.content || news.excerpt || '').substring(0, 120) + '...' }}
                             </p>
-                            <a href="#" class="read-more">Đọc thêm</a>
+                            <router-link to="/tin-tuc" class="read-more">Đọc thêm</router-link>
                         </div>
                     </div>
                 </section>
 
-            </section> <!-- End .product-section-container -->
-
-        </main>
+            </section> </main>
     </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import axios from 'axios';
+// SỬA ĐỔI: Thêm import Vue Router để sử dụng trong script (nếu cần logic điều hướng phức tạp)
+import { useRouter } from 'vue-router'; 
 
 const API_URL = 'http://localhost:3000';
+// Khởi tạo router
+const router = useRouter();
 
 // State
 const categories = ref([]);
@@ -163,9 +164,11 @@ const products = ref([]);
 const users = ref([]);
 const newsList = ref([]);
 const roles = ref([]);
-const activeCategoryId = ref(null);
+const activeCategoryId = ref(null); // Giữ lại để quản lý trạng thái active CSS
 const currentSlide = ref(0);
 let interval = null;
+
+// ... (Các hàm fetchData, computed properties, slider logic giữ nguyên) ...
 
 // --- FETCH DATA ---
 const fetchData = async () => {
@@ -223,8 +226,12 @@ const nextSlide = () => { stopAutoSlide(); currentSlide.value = (currentSlide.va
 const prevSlide = () => { stopAutoSlide(); currentSlide.value = (currentSlide.value - 1 + slides.value.length) % slides.value.length; };
 const goToSlide = (index) => { stopAutoSlide(); currentSlide.value = index; };
 
+
 // --- HELPER FUNCTIONS ---
-const setActiveCategory = (id) => { activeCategoryId.value = String(id); };
+
+// SỬA ĐỔI: Chỉ giữ lại việc gán activeCategoryId để CSS vẫn hoạt động nếu cần.
+// Việc điều hướng đã được xử lý bởi <router-link>
+const setActiveCategory = (id) => { activeCategoryId.value = String(id); }; 
 
 const getUserRoleLabel = (roleValue) => {
     if (!roles.value.length) return roleValue || 'Khách';
@@ -241,6 +248,7 @@ const formatCurrency = (value) => new Intl.NumberFormat('vi-VN', { style: 'curre
 // --- ACTIONS ---
 const openQuickView = (product) => { alert(`Xem nhanh: ${product.name}`); };
 const addToCart = (product) => { alert(`Đã thêm vào giỏ: ${product.name}`); };
+
 
 // --- LIFECYCLE HOOKS ---
 onMounted(async () => {
