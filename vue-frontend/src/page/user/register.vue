@@ -8,15 +8,18 @@ const API_URL = import.meta.env.VITE_API_BASE_URL;
 const router = useRouter();
 
 const formData = reactive({
+    username: '',
     fullName: '',
     email: '',
     password: '',
     phone: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    role: 'user'
 });
 
 const error = reactive({
     fullName: '',
+    username: '',
     email: '',
     phone: '',
     password: '',
@@ -42,6 +45,15 @@ const validateForm = () => {
     Object.keys(error).forEach(key => error[key] = '');
     let isValid = true;
     const phoneRegex = /^(0[3|5|7|8|9])+([0-9]{8})$/;
+    const re = /^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]+$/;
+
+    if (!formData.username.trim()) {
+        error.username = 'Vui lòng nhập tên hiển thị.';
+        isValid = false;
+    } else if (!re.test(formData.username)) {
+        error.username = 'Tên hiển thị chỉ được dùng chữ và số.';
+        isValid = false;
+    }
 
     if (!formData.fullName.trim()) {
         error.fullName = 'Vui lòng nhập họ và tên.';
@@ -93,15 +105,16 @@ const handleRegister = async () => {
 
     isLoading.value = true;
     const payload = {
-        name: formData.fullName, 
+        username: formData.username,
+        name: formData.fullName,
         email: formData.email,
         phone: formData.phone,
         password: formData.password,
-        password_confirmation: formData.confirmPassword,
+        role: formData.role
     };
 
     try {
-        const res = await axios.post(`${API_URL}/account_user`, payload);
+        const res = await axios.post(`${API_URL}/users`, payload);
 
         if (res.status === 201 || res.status === 200) {
             Swal.fire({
@@ -112,7 +125,7 @@ const handleRegister = async () => {
                 confirmButtonColor: '#009981',
             }).then(() => {
                 router.push({ name: 'login' });
-                Object.assign(formData, { fullName: '', email: '', password: '', phone: '', confirmPassword: '' });
+                Object.assign(formData, { username: '', fullName: '', email: '', password: '', phone: '', confirmPassword: '' });
                 agreedToTerms.value = false;
             });
         }
@@ -164,6 +177,14 @@ const handleRegister = async () => {
                 <h2>Đăng ký</h2>
 
                 <form action="#" method="POST" class="login-form" @submit.prevent="handleRegister">
+                    <div class="form-group">
+                        <label for="username">Tên hiển thị</label>
+                        <input type="text" id="username" v-model="formData.username" name="fullname"
+                            placeholder="Nhập tên hiển thị của bạn"
+                            :class="['form-control', error.username ? 'is-invalid' : '']">
+                        <div v-if="error.username" class="invalid-feedback d-block">{{ error.username }}</div>
+                    </div>
+
                     <div class="form-group">
                         <label for="fullname">Họ và tên</label>
                         <input type="text" id="fullname" v-model="formData.fullName" name="fullname"
@@ -219,7 +240,7 @@ const handleRegister = async () => {
                     </div>
 
                     <div class="form-group">
-                        <input type="checkbox" v-model="agreedToTerms"/>
+                        <input type="checkbox" v-model="agreedToTerms" />
                         <label for="agreeTerms" class="form-check-label">
                             Tôi đồng ý với
                             <a href="#" class="text-decoration-none fw-medium" style="color: #009981;">điều khoản
