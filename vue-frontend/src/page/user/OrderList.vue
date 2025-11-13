@@ -76,6 +76,36 @@ const isRepurchasable = computed(() => selectedOrder.value?.canRepurchase);
 const isReturnable = computed(() => selectedOrder.value?.canReturn && (selectedOrder.value?.status === 'Đã giao thành công' || selectedOrder.value?.status === 'Hoàn thành, có thể đánh giá'));
 const isReviewAvailable = computed(() => selectedOrder.value?.canReview && !selectedOrder.value?.isReviewed && (selectedOrder.value?.status === 'Đã giao thành công' || selectedOrder.value?.status === 'Hoàn thành, có thể đánh giá'));
 
+// --- Logic cho Thanh Tiến Trình ---
+
+const orderSteps = [
+  { key: 'placed', label: 'Đã đặt hàng', statusMatch: ['Đã đặt hàng', 'Chờ chuyển phát', 'Đang giao hàng', 'Đã giao thành công', 'Hoàn thành, có thể đánh giá'] },
+  { key: 'shipping_prep', label: 'Chờ chuyển phát', statusMatch: ['Chờ chuyển phát', 'Đang giao hàng', 'Đã giao thành công', 'Hoàn thành, có thể đánh giá'] },
+  { key: 'in_transit', label: 'Đang trung chuyển', statusMatch: ['Đang giao hàng', 'Đã giao thành công', 'Hoàn thành, có thể đánh giá'] },
+  { key: 'delivered', label: 'Đã giao đơn hàng', statusMatch: ['Đã giao thành công', 'Hoàn thành, có thể đánh giá'] },
+];
+
+const getActiveStepIndex = computed(() => {
+  if (!selectedOrder.value) return -1;
+
+  // Xử lý trường hợp đặc biệt: Đã hủy
+  if (selectedOrder.value.status === 'Đã hủy') {
+    return -2; // Đánh dấu trạng thái hủy
+  }
+
+  // Tìm kiếm trạng thái khớp với bước cuối cùng (step index cao nhất)
+  let activeIndex = -1;
+  const currentStatus = selectedOrder.value.status;
+  for (let i = orderSteps.length - 1; i >= 0; i--) {
+    if (orderSteps[i].statusMatch.includes(currentStatus)) {
+      activeIndex = i;
+      break;
+    }
+  }
+  return activeIndex;
+});
+
+
 // --- Hàm Định Dạng và Class ---
 
 const formatCurrency = (amount) => {
@@ -108,8 +138,14 @@ const handleCancel = () => {
   if (confirm(`Bạn có chắc muốn hủy đơn hàng #${selectedOrder.value.id} không?`)) {
     alert(`Đã gửi yêu cầu hủy đơn hàng #${selectedOrder.value.id}`);
     // Giả lập cập nhật trạng thái
-    selectedOrder.value.status = 'Đã hủy';
-    selectedOrder.value.canCancel = false;
+    const orderToUpdate = orders.value.find(o => o.id === selectedOrder.value.id);
+    if (orderToUpdate) {
+      orderToUpdate.status = 'Đã hủy';
+      orderToUpdate.canCancel = false;
+      // Cập nhật selectedOrder nếu đang mở popup
+      selectedOrder.value.status = 'Đã hủy';
+      selectedOrder.value.canCancel = false;
+    }
   }
 };
 
@@ -128,14 +164,24 @@ const handleSubmitReview = () => {
     return;
   }
   alert(`Cảm ơn bạn đã đánh giá ${reviewRating.value} sao cho đơn hàng #${selectedOrder.value.id}!`);
-  selectedOrder.value.isReviewed = true;
+  const orderToUpdate = orders.value.find(o => o.id === selectedOrder.value.id);
+  if (orderToUpdate) {
+    orderToUpdate.isReviewed = true;
+    // Cập nhật selectedOrder nếu đang mở popup
+    selectedOrder.value.isReviewed = true;
+  }
   isReviewing.value = false;
 };
 
 const handleReturn = () => {
   if (confirm(`Bạn có chắc muốn yêu cầu hoàn hàng cho đơn hàng #${selectedOrder.value.id} không?`)) {
     alert(`Đã gửi yêu cầu hoàn hàng cho đơn hàng #${selectedOrder.value.id}.`);
-    selectedOrder.value.canReturn = false;
+    const orderToUpdate = orders.value.find(o => o.id === selectedOrder.value.id);
+    if (orderToUpdate) {
+      orderToUpdate.canReturn = false;
+      // Cập nhật selectedOrder nếu đang mở popup
+      selectedOrder.value.canReturn = false;
+    }
   }
 };
 </script>
@@ -172,7 +218,7 @@ const handleReturn = () => {
         <p class="total-amount">Tổng cộng: <strong>{{ formatCurrency(order.total) }}</strong></p>
 
         <button class="detail-btn">
-          Xem Chi Tiết 
+          Xem Chi Tiết
         </button>
       </div>
     </div>
@@ -184,6 +230,30 @@ const handleReturn = () => {
         <button class="close-btn" @click="closeDetailPopup">×</button>
         <h2 class="popup-title">🛒 Chi Tiết Đơn Hàng #{{ selectedOrder.id }}</h2>
 
+        <div class="status-progress-bar-container">
+          <div v-if="getActiveStepIndex === -2" class="cancelled-status-message">
+            ❌ Đơn hàng đã bị hủy
+          </div>
+          <div v-else class="status-progress-bar">
+            <div v-for="(step, index) in orderSteps" :key="step.key" class="step" :class="{
+              'active': index <= getActiveStepIndex,
+              'current': index === getActiveStepIndex
+            }">
+              <div class="icon-container">
+                <i v-if="step.key === 'placed'" class="fas fa-box-open"></i>
+                <i v-else-if="step.key === 'shipping_prep'" class="fas fa-truck-loading"></i>
+                <i v-else-if="step.key === 'in_transit'" class="fas fa-shipping-fast"></i>
+                <i v-else-if="step.key === 'delivered'" class="fas fa-check-circle"></i>
+              </div>
+              <div class="step-label">{{ step.label }}</div>
+            </div>
+            <div class="progress-line">
+              <div class="progress-fill"
+                :style="{ width: getActiveStepIndex === -1 ? '0%' : (getActiveStepIndex / (orderSteps.length - 1)) * 100 + '%' }">
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="detail-card info-section">
           <h3><i class="fas fa-info-circle section-icon"></i> Thông tin Đơn hàng</h3>
           <div class="info-row">
@@ -298,8 +368,7 @@ const handleReturn = () => {
   --border-color: #e0e0e0;
 }
 
-/* --- STYLES CHO DANH SÁCH --- */
-
+/* --- STYLES CHO DANH SÁCH (giữ nguyên) --- */
 .order-list-container {
   padding: 20px;
   max-width: 900px;
@@ -429,8 +498,7 @@ const handleReturn = () => {
   font-style: italic;
 }
 
-/* --- STYLES CHO POPUP --- */
-
+/* --- STYLES CHO POPUP (giữ nguyên) --- */
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -480,10 +548,9 @@ const handleReturn = () => {
   margin-bottom: 20px;
 }
 
-/* --- STYLES CHI TIẾT ĐƠN HÀNG (Dùng lại và chỉnh sửa nhẹ) --- */
+/* --- STYLES CHI TIẾT ĐƠN HÀNG (Giữ nguyên) --- */
 
 .detail-card {
-  /* Điều chỉnh nhẹ để phù hợp với nền popup */
   background-color: #fcfcfc;
   border-radius: 8px;
   box-shadow: none;
@@ -493,7 +560,6 @@ const handleReturn = () => {
 }
 
 .detail-card h3 {
-  /* Giữ nguyên phong cách viền trái */
   border-left: 5px solid var(--primary-color);
   padding-left: 15px;
   font-size: 1.2em;
@@ -501,13 +567,11 @@ const handleReturn = () => {
 }
 
 .product-list-popup {
-  /* Giống .product-list nhưng cho popup */
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-/* Giữ nguyên các styles chi tiết khác */
 .info-section .info-row {
   display: flex;
   justify-content: space-between;
@@ -605,58 +669,45 @@ const handleReturn = () => {
   gap: 8px;
 }
 
-/* 5. Action Section - Đã sửa màu theo yêu cầu code cũ */
+/* Action Section (Giữ nguyên) */
 .action-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  /* Khoảng cách giữa các nút */
 }
 
 .action-btn {
   padding: 12px 20px;
-  /* Tăng padding */
   border: none;
   border-radius: 8px;
-  /* Bo tròn nhiều hơn */
   cursor: pointer;
   font-weight: 600;
-  /* Đậm hơn một chút */
   font-size: 1em;
   transition: all 0.3s ease;
-  /* Hiệu ứng chuyển động mượt mà */
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  /* Khoảng cách giữa icon và text */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  /* Thêm bóng đổ nhẹ */
   flex-grow: 1;
 }
 
 .action-btn i {
   font-size: 1.1em;
-  /* Kích thước icon lớn hơn */
 }
 
-/* Màu và hiệu ứng cho từng loại nút (Đã khôi phục) */
 .primary-btn {
-  /* Dùng cho Mua Lại */
   background-color: var(--primary-color);
   color: white;
 }
 
 .primary-btn:hover {
   background-color: #007A65;
-  /* Màu đậm hơn khi hover */
   transform: translateY(-2px);
-  /* Nhấc nhẹ nút lên */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .danger-btn {
-  /* Dùng cho Hủy Đơn Hàng */
   background-color: red;
   color: white;
 }
@@ -668,7 +719,6 @@ const handleReturn = () => {
 }
 
 .success-btn {
-  /* Dùng cho Đánh Giá (màu xanh lá) */
   background-color: green;
   color: white;
 }
@@ -680,7 +730,6 @@ const handleReturn = () => {
 }
 
 .secondary-btn {
-  /* Dùng cho Hoàn Hàng */
   background-color: rgb(220, 53, 69);
   color: white;
 }
@@ -701,12 +750,10 @@ const handleReturn = () => {
 
 .disabled-btn:hover {
   transform: none;
-  /* Không nhấc nút lên khi disabled */
   box-shadow: none;
 }
 
-
-/* 6. Review Form */
+/* Review Form (Giữ nguyên) */
 .review-form-section textarea {
   width: 100%;
   min-height: 120px;
@@ -716,18 +763,15 @@ const handleReturn = () => {
   border-radius: 8px;
   box-sizing: border-box;
   font-family: inherit;
-  /* Kế thừa font chữ */
   font-size: 1em;
 }
 
 .rating-stars {
   font-size: 1.8em;
-  /* Sao lớn hơn */
   cursor: pointer;
   color: #ccc;
   display: flex;
   gap: 5px;
-  /* Khoảng cách giữa các sao */
   margin-bottom: 10px;
 }
 
@@ -741,7 +785,117 @@ const handleReturn = () => {
 
 .submit-review-btn {
   width: auto;
-  /* Để nút không chiếm hết chiều rộng */
   margin-top: 10px;
+}
+
+
+/* --- STYLES MỚI CHO THANH TIẾN TRÌNH TRẠNG THÁI --- */
+
+.status-progress-bar-container {
+  padding: 20px 10px;
+  margin-bottom: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  position: relative;
+  border: 1px solid #ddd;
+}
+
+.status-progress-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  padding-top: 20px;
+  /* Khoảng trống cho icon/dot */
+}
+
+.progress-line {
+  position: absolute;
+  top: 30px;
+  /* Căn giữa chiều dọc với các icon */
+  left: 10%;
+  right: 10%;
+  height: 4px;
+  background-color: #ccc;
+  z-index: 1;
+  border-radius: 2px;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--primary-color);
+  transition: width 0.5s ease-in-out;
+  border-radius: 2px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 25%;
+  /* Chia đều cho 4 bước */
+  position: relative;
+  z-index: 2;
+  /* Đảm bảo các bước nằm trên đường kẻ */
+}
+
+.icon-container {
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  border: 3px solid #ccc;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ccc;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.step.active .icon-container {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.step.current .icon-container {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+  transform: scale(1.1);
+  box-shadow: 0 0 0 5px rgba(0, 153, 129, 0.2);
+  /* Hiệu ứng nhấn mạnh */
+}
+
+.step-label {
+  font-size: 0.9em;
+  font-weight: 500;
+  color: #999;
+  min-height: 40px;
+  /* Đảm bảo chiều cao đồng đều */
+  transition: color 0.3s ease;
+}
+
+.step.active .step-label {
+  color: var(--text-color);
+}
+
+.step.current .step-label {
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+/* Xử lý trạng thái Đã hủy */
+.cancelled-status-message {
+  text-align: center;
+  padding: 15px;
+  background-color: #FADBD8;
+  color: var(--danger-color);
+  border: 1px solid var(--danger-color);
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1.1em;
 }
 </style>
